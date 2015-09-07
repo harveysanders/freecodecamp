@@ -1,0 +1,19 @@
+.navbar-fixed-top {
+	background-color: rgba(0, 0, 0, 0.75); 
+	padding: 10px;
+}
+#fbsection1 {
+	/*padding-top:60px;*/
+}
+.container{
+	width: 100%;
+	padding: 0px;
+}
+.btn {
+	color: rgb(12,12,12);
+	border: solid black 1px;
+	box-shadow: 5px 2px 25px rgb(100,100,100);
+}
+section img {
+	border-radius: 50%;
+}

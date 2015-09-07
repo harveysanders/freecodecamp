@@ -1,0 +1,31 @@
+body{
+    background-color: #dddddd;
+    text-align: center;
+
+}
+.container{
+	max-width: 960px;
+}
+/*header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}*/
+
+#break, #work{
+    display: block;
+}
+
+#timer{
+	width:100px;
+	height:100px;
+	
+	border: 2px solid #990000;
+	background-color: #880000;
+	border-radius: 50%;
+
+	color: #dddddd;
+	text-align: center;
+	vertical-align: midle
+	line-height 100px;
+}
