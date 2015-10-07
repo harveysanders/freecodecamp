@@ -6,6 +6,8 @@ $( document ).ready(function(){
 		timer,
 		onBreak,
 		isPaused,
+		timeRemaining,
+		timerSound,
 		
 		$breakTime,
 		$sessionTime,
@@ -18,70 +20,79 @@ $( document ).ready(function(){
 	onBreak = false;
 	isPaused = false;
 
+	timerSound = new Audio('http://www.pdsounds.org/audio/download/763/appear.mp3');
+
 	$breakTime = $('#breakTime');
 	$sessionTime = $('#sessTime');
 	$timer = $('#timer');
 	$pomodoro = $('#pomodoro');
 
 	$('#setBreak > .minus').on('click', function(){
-		breakTime > 1 ? breakTime -- : breakTime = 1;
+		breakTime > 0 ? breakTime -- : breakTime = 0;
 		$breakTime.html(breakTime);
+		updateTimerDisplay();
 	});
 	$('#setBreak > .plus').on('click', function(){
 		breakTime ++;
 		$breakTime.html(breakTime);
+		updateTimerDisplay();
 	});
 	$('#setSession > .minus').on('click', function(){
-		sessionTime > 1 ? sessionTime -- : sessionTime = 1;
+		sessionTime > 0 ? sessionTime -- : sessionTime = 0;
 		$sessionTime.html(sessionTime);
-		$timer.html(sessionTime);
+		updateTimerDisplay();
 	});
 	$('#setSession > .plus').on('click', function(){
 		sessionTime ++;
 		$sessionTime.html(sessionTime);
-		$timer.html(sessionTime);
+		updateTimerDisplay();
 	});
 	$pomodoro.on('click', function(){
 		if (timer) {
 			clearInterval(timer);
 			timer = null;
 			$('button').prop('disabled', false);
-		} else {
-			onBreak ? startBreakTimer() : startSessionTimer();
+		} else if(timeRemaining > 1000){
+			var timeAtBreak = timeRemaining / 60000;
+			onBreak ? startBreakTimer(timeAtBreak) : startSessionTimer(timeAtBreak);
+		}else {
+			onBreak ? startBreakTimer(breakTime) : startSessionTimer(sessionTime);
 			$('button').prop('disabled', true);
 		}
 		
 	});
 
-
-	function startSessionTimer(){
+	function updateTimerDisplay(){
+		onBreak ? $timer.html(breakTime) : $timer.html(sessionTime);
+	}
+	function startSessionTimer(minutes){
 		onBreak = false;
 		$('.timer-type').html('Session');
 		var startTime = new Date().getTime();
-		var countDownFrom = sessionTime * 60000;
+		var countDownFrom = minutes * 60000;
 		timer = setInterval(function(){
 			var timeSinceStart = new Date().getTime() - startTime;
-			var timeRemaining = countDownFrom - timeSinceStart;
-			console.log(timeRemaining);
+			timeRemaining = countDownFrom - timeSinceStart;
 			var min = Math.floor(timeRemaining/60000);
 			var sec = Math.floor((timeRemaining/1000) % 60);
 			if (sec < 10) {sec = '0' + sec;}
 			$timer.html(min + ':' + sec);
 
 			if (timeRemaining < 0){
+				timerSound.play();
 				$timer.html('0:00');
 				clearInterval(timer);
-				startBreakTimer();
+				startBreakTimer(breakTime);
 			}			
 		},1000);
 
 	}
 
-	function startBreakTimer(){
+	function startBreakTimer(minutes){
 		onBreak = true;
 		$('.timer-type').html('Break');
 		var startTime = new Date().getTime();
-		var countDownFrom = breakTime * 60000;
+		var countDownFrom = minutes * 60000;
 		timer = setInterval(function(){
 			var timeSinceStart = new Date().getTime() - startTime;
 			var timeRemaining = countDownFrom - timeSinceStart;
@@ -91,9 +102,10 @@ $( document ).ready(function(){
 			$timer.html(min + ':' + sec);
 
 			if (timeRemaining < 0){
+				timerSound.play();
 				$timer.html('0:00');
 				clearInterval(timer);
-				startSessionTimer();
+				startSessionTimer(sessionTime);
 			}			
 		},1000);
 	}
