@@ -1,78 +1,111 @@
-$(document).ready(function(){
-    var breakTime, counter, min, sec, audio, sessionTime, isCounting;
-    
-    sessionTime = 0;
-    breakTime = 5;
-    min = 0;
-    sec = 0;
-    audio = $('audio');
-    isCounting = false;
-    
-    console.log(sessionTime);
+$( document ).ready(function(){
+	var breakTime,
+		sessionTime,
+		start,
+		elapsed,
+		timer,
+		onBreak,
+		isPaused,
+		
+		$breakTime,
+		$sessionTime,
+		$timer,
+		$pomodoro
+		;
 
-    $('#timer').html(min);
-    $('#breakTime').html(breakTime);
-    
-    function setSessionTime(){
-        sessionTime = parseFloat($('#sessTime').text()); //secs
-        min = sessionTime;
-        console.log(sessionTime);
-    }
+	breakTime = 5;
+	sessionTime = 0.2;
+	onBreak = false;
+	isPaused = false;
 
-    function timer(){
-        
-            if(min === 0 && sec =="00"){
-                clearInterval(counter);
-                $('#timer').html(min  + ":" + sec);
-               console.log('is zero');
-            }
-            else if (min > 0){
-                $('#timer').html(min - 1 + ":" + sec);
-                  sec--;
-            } else {
-                $('#timer').html(min  + ":" + sec);
-                  sec--;
-            }
-            
-            if(sec < 10 && sec > -1){
-                sec = "0" + sec;
-              
-            }
-            if(sec < 0){
-                sec = 59;
-                min--;
-            }
-            
-    }
-    
-    setSessionTime();
+	$breakTime = $('#breakTime');
+	$sessionTime = $('#sessTime');
+	$timer = $('#timer');
+	$pomodoro = $('#pomodoro');
 
-    $('#timer').on('click', function(){
-        if (!isCounting) {
-            counter = setInterval(timer, 1000);
-        }
-        else {
-            clearInterval(counter);
-        }
-        isCounting = !isCounting;
-    });
-    
-    $('#plus').click(function(){
-        if(breakTime > 59){
-            breakTime = 60;
-        }
-        breakTime++;
-         $('#breakTime').html(breakTime);
-    });
-    
-    $('#minus').click(function(){
-        breakTime--;
-        if (breakTime < 1) {
-            breakTime = 1;
-        }
-         $('#breakTime').html(breakTime);
-    });
-   
-    
-    
-});
+	$('#setBreak > .minus').on('click', function(){
+		breakTime > 1 ? breakTime -- : breakTime = 1;
+		$breakTime.html(breakTime);
+	});
+	$('#setBreak > .plus').on('click', function(){
+		breakTime ++;
+		$breakTime.html(breakTime);
+	});
+	$('#setSession > .minus').on('click', function(){
+		sessionTime > 1 ? sessionTime -- : sessionTime = 1;
+		$sessionTime.html(sessionTime);
+		$timer.html(sessionTime);
+	});
+	$('#setSession > .plus').on('click', function(){
+		sessionTime ++;
+		$sessionTime.html(sessionTime);
+		$timer.html(sessionTime);
+	});
+	$pomodoro.on('click', function(){
+		if (timer) {
+			clearInterval(timer);
+			timer = null;
+			$('button').prop('disabled', false);
+		} else {
+			onBreak ? startBreakTimer() : startSessionTimer();
+			$('button').prop('disabled', true);
+		}
+		
+	});
+
+
+	function startSessionTimer(){
+		onBreak = false;
+		$('.timer-type').html('Session');
+		var startTime = new Date().getTime();
+		var countDownFrom = sessionTime * 60000;
+		timer = setInterval(function(){
+			var timeSinceStart = new Date().getTime() - startTime;
+			var timeRemaining = countDownFrom - timeSinceStart;
+			console.log(timeRemaining);
+			var min = Math.floor(timeRemaining/60000);
+			var sec = Math.floor((timeRemaining/1000) % 60);
+			if (sec < 10) {sec = '0' + sec;}
+			$timer.html(min + ':' + sec);
+
+			if (timeRemaining < 0){
+				$timer.html('0:00');
+				clearInterval(timer);
+				startBreakTimer();
+			}			
+		},1000);
+
+	}
+
+	function startBreakTimer(){
+		onBreak = true;
+		$('.timer-type').html('Break');
+		var startTime = new Date().getTime();
+		var countDownFrom = breakTime * 60000;
+		timer = setInterval(function(){
+			var timeSinceStart = new Date().getTime() - startTime;
+			var timeRemaining = countDownFrom - timeSinceStart;
+			var min = Math.floor(timeRemaining/60000);
+			var sec = Math.floor((timeRemaining/1000) % 60);
+			if (sec < 10) {sec = '0' + sec;}
+			$timer.html(min + ':' + sec);
+
+			if (timeRemaining < 0){
+				$timer.html('0:00');
+				clearInterval(timer);
+				startSessionTimer();
+			}			
+		},1000);
+	}
+	
+	function disableUI(){
+		$('button').disabled = true;
+	}
+
+	//initialize view
+	$breakTime.html(breakTime);
+	$sessionTime.html(sessionTime);
+	$('.timer-type').html('Session');
+	$timer.html(sessionTime);
+
+});		
