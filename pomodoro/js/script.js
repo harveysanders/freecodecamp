@@ -68,13 +68,19 @@ $( document ).ready(function(){
 	function startSessionTimer(minutes){
 		onBreak = false;
 		$('.timer-type').html('Session');
+		$pomodoro.css('border', '2px solid #569900');
+		var percentComplete;
 		var startTime = new Date().getTime();
 		var countDownFrom = minutes * 60000;
 		timer = setInterval(function(){
 			var timeSinceStart = new Date().getTime() - startTime;
 			timeRemaining = countDownFrom - timeSinceStart;
+			percentComplete = 1-(timeRemaining / countDownFrom);
+			$pomodoro.css('background', 'linear-gradient(0deg, #569900 '+ (percentComplete * 100) +'%, rgba(0,0,0,0) 0%)');
+			
 			var min = Math.floor(timeRemaining/60000);
 			var sec = Math.floor((timeRemaining/1000) % 60);
+			
 			if (sec < 10) {sec = '0' + sec;}
 			$timer.html(min + ':' + sec);
 
@@ -91,13 +97,19 @@ $( document ).ready(function(){
 	function startBreakTimer(minutes){
 		onBreak = true;
 		$('.timer-type').html('Break');
+		$pomodoro.css('border', '2px solid #990000');
+		var percentComplete;
 		var startTime = new Date().getTime();
 		var countDownFrom = minutes * 60000;
 		timer = setInterval(function(){
 			var timeSinceStart = new Date().getTime() - startTime;
-			var timeRemaining = countDownFrom - timeSinceStart;
+			timeRemaining = countDownFrom - timeSinceStart;
+			percentComplete = 1-(timeRemaining / countDownFrom);
+			$pomodoro.css('background', 'linear-gradient(0deg, #880000 '+ (percentComplete * 100) +'%, rgba(0,0,0,0) 0%)');
+
 			var min = Math.floor(timeRemaining/60000);
 			var sec = Math.floor((timeRemaining/1000) % 60);
+
 			if (sec < 10) {sec = '0' + sec;}
 			$timer.html(min + ':' + sec);
 

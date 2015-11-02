@@ -1,12 +1,18 @@
+body {
+	/* Background pattern from subtlepatterns.com */
+	background-image: url(/img/concrete_seamless.png);
+
+}
 h1, #new_quote_btn {
 	font-family: 'Zeyada', cursive;
 }
 
 #new_quote_btn {
 	padding-top: 10px;
-	font-size: 40px;
+	font-size: 30px;
 }
 button {
 	margin:30px;
 	box-shadow: 10px 10px 5px #999999;
+	border-radius: 30%;
 }

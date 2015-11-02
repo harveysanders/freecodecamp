@@ -1,0 +1,44 @@
+html, body{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+.bg {
+	/*width: 100%;*/
+	/*min-height: 1080px;*/
+	height: auto !important;
+	min-height: 100%;
+	background-image: url(https://static.pexels.com/photos/7763/pexels-photo.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.container{
+	max-width: 960px;
+	padding-top: 3em;
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 100%;
+}
+header {
+	font-size: 1.5em;
+}
+.temp{
+	font-size: 2em;
+	font-weight: 700;
+	color: #ffffff;
+	text-shadow: 2px 2px 2px #888888;
+}
+.temp img{
+	vertical-align: middle;
+}
+.stats > .row > div  {
+	background-color: rgba(200, 200, 200, 0.25);
+	border-radius: 10px;
+	box-shadow: 5px 5px 8px #888888;
+	padding: 15px 0px 15px 0px;
+}
+button{
+	background-color: rgba(200,200,200,0.7);
+}

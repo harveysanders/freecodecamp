@@ -1,9 +1,13 @@
+body{
+	font-family: 'Podkova', serif;
+	color: #ddd;
+}
 .navbar-fixed-top {
 	background-color: rgba(0, 0, 0, 0.75); 
 	padding: 10px;
 }
 #fbsection1 {
-	/*padding-top:60px;*/
+	padding-top:180px;
 }
 .container{
 	width: 100%;
@@ -14,6 +18,14 @@
 	border: solid black 1px;
 	box-shadow: 5px 2px 25px rgb(100,100,100);
 }
+section{
+	padding-top:40px;
+	text-align: center;
+}
 section img {
 	border-radius: 50%;
+}
+
+h1{
+	font-family: 'Satisfy', cursive;
 }

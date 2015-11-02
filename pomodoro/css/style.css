@@ -1,6 +1,7 @@
 body{
-    background-color: #dddddd;
+    background-color: #747474;
     text-align: center;
+    color: #eeeeee;
 
     /*fix fonts not rendering*/
     -webkit-animation-delay: 0.1s;
@@ -14,33 +15,41 @@ body{
     from { opacity: 1; }
     to   { opacity: 1; }
 }
-
+h1{
+	font-family: 'Fugaz One', cursive;
+}
 .container{
 	font-family: 'Quicksand', sans-serif;
 	max-width: 960px;
 }
-/*header{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}*/
+
+button {
+	color: #eeeeee;
+	border: 1px solid rgba(0,0,0,0);
+	font-size: 1.7rem;
+}
+
 #breakTime, #sessTime{
 	font-size: 2em;
 }
 
 #pomodoro{
 	font-family: 'Quicksand', sans-serif;
-	font-size: 2em;
+	font-size: 2rem;
 	width:20rem;
 	height:20rem;
 	
-	border: 2px solid #990000;
-	background-color: #880000;
+	border: 2px solid #569900;
+	/*background: linear-gradient(0deg, #880000 50%, rgba(0,0,0,0) 0%);*/
+	/*background-color: #880000;*/
 	border-radius: 50%;
 
 	color: #dddddd;
 	text-align: center;
 	vertical-align: middle;
-	line-height:10rem;
+	line-height:9rem;
+}
+#timer{
+	font-size: 6rem;
 }
 

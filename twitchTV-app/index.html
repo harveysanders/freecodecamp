@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Twitch TV listings</title>
+	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+    <link href='https://fonts.googleapis.com/css?family=Quicksand|Abel' rel='stylesheet' type='text/css'>
+    <!-- <link rel="stylesheet" type="text/css" href="http://localhost:8082/SkeletonCSS/css/skeleton.css"> -->
+    <!-- <script type="text/javascript" src="https://ttv-api.s3.amazonaws.com/twitch.min.js"></script> -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<div class='nav'>
+			<ul>
+				<li class="all"><a href="#">All</a></li>
+				<li class='online'><a href="#">Online</a></li>
+				<li class="offline"><a href="#">Offline</a></li>
+			</ul>
+		</div>
+			<div class='search-input'><input placeholder="search"></input></div>
+			
+			<div class="user-list flex-container">
+				<!-- test user listing -->
+				<div class='user-item'>
+					<img src="http://lorempixel.com/50/50" />
+					
+					<div class="user-info">
+						<a href="http://twitch.tv/dooskies"><header>Dooskies</header></a>
+						<span class='stream-details'>Streamin' crap all day everyday!!</span>
+					</div>
+					
+					<div class="is-streaming">
+						<i class="fa fa-exclamation-circle"></i>
+					</div>
+
+				</div>
+
+			</div>
+		
+	</div>
+	<!-- <script>
+	  Twitch.init({clientId: 'a48m3cmx0f6ckhcz1vcgsm67157eytm'}, function(error, status) {
+	    // the sdk is now loaded
+	  });
+	</script> -->
+	<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>

@@ -14,7 +14,7 @@ $(document).ready(function() {
 	sections.map(function($section, index){
 		$section = $('#fbsection' + index);
 		$section.css({
-			'background-image' : 'url(images/bokeh' + index + '.jpg)',
+			'background-image' : 'url(img/bokeh' + index + '.jpg)',
 			'padding-top' : $('.navbar-fixed-top').height() + 30 + 'px',
 		});
 		$section.append('<div>').attr({'class' : 'text-center'});
