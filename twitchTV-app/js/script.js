@@ -1,5 +1,5 @@
 (function(){
-	var usernames = ["freecodecamp", "MedryBW", "storbeck", "terakilobyte", "habathcx","RobotCaleb","thomasballinger","noobs2ninjas","beohoff", 'brunofin', 'comster404', 'biscuits5161'];
+	var usernames = ["freecodecamp", "MedryBW", "storbeck", "terakilobyte", "habathcx","RobotCaleb","thomasballinger","noobs2ninjas","beohoff"];
 	var channels = [];
 	var filteredChannels = [];
 	var $searchInput = $('.search-input input');
@@ -23,6 +23,7 @@
 			channel.logo = 'https://s3.amazonaws.com/rapgenius/oops-my-bad.jpg';
 			channel.display_name = 'User Not Found.';
 			channel.url = '#';
+			channel.status = null;
 		}
 		var streamStatus = '';
 		var statusIcon = '<i class="fa fa-exclamation-circle"></i>';
@@ -45,6 +46,12 @@
 		return $userListItem;
 	}
 
+	function create$elements(channels){
+		return channels.map(function(channel){
+			return createUserListItem(channel);
+		});
+	}
+
 	function displayList(channels){
 		$('.user-list').empty();
 		$('.user-list').append(channels);
@@ -52,7 +59,8 @@
 
 	function handleNavButton(navButtonClass){
 		filteredChannels = channels;
-		$('.' + navButtonClass + 'a').css('color', '#E6E57D');
+		$('.nav a').css('color', '#FFF');
+		$('.' + navButtonClass + ' a').css('color', '#E6E57D');
 
 		if (navButtonClass === 'online'){
 			filteredChannels = channels.filter(function(channel){
@@ -64,16 +72,23 @@
 			});
 		}
 
-		var itemsToDisplay = filteredChannels.map(function(channel){
-			return createUserListItem(channel);
-		});
+		var itemsToDisplay = create$elements(filteredChannels);
 
 		displayList(itemsToDisplay);
 	}
 
-	function search(query){
-		console.log(query);
+	function searchHandler(query){
+		var query = query.toLowerCase();
+		var results = filteredChannels.filter(function(channel){
+			var allWords = _.union(_.words(channel.status), _.words(channel.display_name));
+			return allWords.map(function(word){
+				return _.startsWith(word.toLowerCase(), query);
+			}).some(function(bool){
+				return bool === true;
+			});
 
+		});
+		return results;
 	}
 
 	$('.nav li').on('click', function(event){
@@ -81,7 +96,7 @@
 	});
 
 	$searchInput.on('input', function(){ //'change' only works when input loses focus.
-		search($searchInput.val());
+		displayList(create$elements(searchHandler($searchInput.val())));
 	});
 
 })();

@@ -68,6 +68,7 @@ body {
 	height: 1.8em;
 	padding: 0px;
 	-webkit-apperance: none;
+	text-indent: 1em;
 }
 
 textarea:focus, input:focus{
