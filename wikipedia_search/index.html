@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<title>Wikipedia Search</title>
 </head>
 <body>
-	<button id='test'>Log Results</button>
+	<div class="container">
+
+		<div class="form-group">
+			<input type='text' id='search' placeholder='search'></input>
+		</div>
+		
+		<div class='search-result'>
+			<dl>
+				<dt>Australian Kelpie</dt>
+				<dd>from Scottish folklore.  For the dog breed, see Australian <span class="searchmatch">Kelpie</span>.      <span class="searchmatch">Kelpie</span>, or water <span class="searchmatch">kelpie</span>, is the Scots name given to a shape-shifting water spirit
+				</dd>
+			</dl>
+		</div>
+		
+	</div>
+
 	<script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>

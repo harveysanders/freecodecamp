@@ -1,0 +1,21 @@
+body{
+	background-color: #F7F6F2;
+	color: #747533;
+}
+
+#search {
+	border-radius: 1em;
+	background-color: transparent;
+	text-indent: 1em;
+}
+.search-result {
+	background-color: #CAE001;
+	color: #747533;
+	padding: 1em;
+	border-radius: 1em;
+	margin-top: 1em;
+}
+
+.searchmatch {
+	color: #0194E0;
+}
