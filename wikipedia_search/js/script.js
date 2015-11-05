@@ -1,9 +1,9 @@
 (function(){
-	var searchResults = [];
+	
 	function queryWikipedia(query){
 		$.get('http://en.wikipedia.org/w/api.php?action=query&list=search&callback=?&format=json&srprop=snippet%7Ctitlesnippet%7Credirecttitle&titles&srsearch=' + encodeURI(query), function(data){
 			console.log(data);
-			searchResults = data.query.search.map(function(result){
+			var searchResults = data.query.search.map(function(result){
 				return createJQueryElement(result);
 			});
 			appendElements(searchResults);
@@ -17,9 +17,12 @@
 	}
 		
 	function createJQueryElement(searchResult){
-		return $('<div>', {
-			'class': 'search-result',
-			html: '<dl><dt>' + searchResult.title + '<dd>' + searchResult.snippet + '...</dd></dt></dl>'
+		return $('<a>', {
+			href: '//en.wikipedia.org/wiki/' + spacesToUnderscores(searchResult.title),
+			html: $('<div>', {
+				'class': 'search-result',
+				html: '<dl><dt>' + searchResult.title + '<dd>' + searchResult.snippet + '...</dd></dt></dl>'
+			})
 		});
 	}
 
@@ -27,7 +30,7 @@
 		$('.container').append(elements);
 	}
 
-	function spaceToUnderscore(string){
+	function spacesToUnderscores(string){
 		return string.replace(' ', '_');
 	}
 

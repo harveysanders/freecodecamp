@@ -19,3 +19,7 @@ body{
 .searchmatch {
 	color: #0194E0;
 }
+
+a:hover{
+	text-decoration: none;
+}
