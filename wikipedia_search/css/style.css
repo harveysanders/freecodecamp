@@ -15,23 +15,18 @@ body{
 
 .search-box {
 	/*margin: 0 auto;*/
-	outline: none;
-	border: solid 0.5em;
+	outline: none;	
 	border-radius: 2em;
 	width: 2.6em;
-	animation-name: grow-search-box;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
+	-webkit-transition: width 2s ease;
+	-moz-transition: width 2s ease;
+	-o-transition: width 2s ease;
+	transition: width 2s ease;
 }
 
-.search-box-animated {
-	outline: none;
+.search-box-change {
 	border: solid 0.5em;
-	border-radius: 2em;
-	width: 2.6em;
-	animation-name: grow-search-box;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
+	width: 12.6em;
 }
 
 .search-result {

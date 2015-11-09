@@ -55,8 +55,11 @@
 	});
 
 	$('.search-icon').on('click', function(){
-		$('.search-box').addClass('.search-icon-animated');
+		$('.search-icon').hide();
+		// $('.search-box').show();
+		$('.search-box').toggleClass('search-box-change');
 	});
 
+	// $('.search-box').hide();
 	$('results-view').hide();
 })();
