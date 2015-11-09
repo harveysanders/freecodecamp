@@ -17,19 +17,39 @@
 	width: 50%;
 	height: 50%;
 	float: left;
+	-webkit-transition: background-color .2s ease;
+	-moz-transition: background-color .2s ease;
+	-o-transition: background-color .2s ease;
+	transition: background-color .2s ease;
 }
-#green-button{
+.green-button{
+	background-color: #005200;
+}
+
+.green-button-lit {
 	background-color: green;
 }
 
-#red-button{
+.red-button{
+	background-color: #8E0303;
+}
+
+.red-button-lit {
 	background-color: red;
 }
 
-#yellow-button{
+.yellow-button{
+	background-color: #C5AF02;
+}
+
+.yellow-button-lit {
 	background-color: yellow;
 }
 
-#blue-button{
+.blue-button{
+	background-color: #030396;
+}
+
+.blue-button-lit {
 	background-color: blue;
 }
