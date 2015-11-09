@@ -3,11 +3,37 @@ body{
 	color: #747533;
 }
 
+@keyframes grow-search-box {
+	from {width: 2.6em;}
+	to {width: 12.6em;}
+}
+
 #search {
-	border-radius: 1em;
 	background-color: transparent;
 	text-indent: 1em;
 }
+
+.search-box {
+	/*margin: 0 auto;*/
+	outline: none;
+	border: solid 0.5em;
+	border-radius: 2em;
+	width: 2.6em;
+	animation-name: grow-search-box;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
+.search-box-animated {
+	outline: none;
+	border: solid 0.5em;
+	border-radius: 2em;
+	width: 2.6em;
+	animation-name: grow-search-box;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
 .search-result {
 	background-color: #CAE001;
 	color: #747533;
@@ -19,7 +45,19 @@ body{
 .searchmatch {
 	color: #0194E0;
 }
-
+.search-icon{
+	position: absolute;
+	top:156px;
+}
 a:hover{
 	text-decoration: none;
+}
+
+.vertical-center {
+	min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+	min-height: 100vh; /* These two lines are counted as one :-)       */
+	display: flex;
+	align-items: center;
+	margin: 0 auto;
+	position: relative;
 }

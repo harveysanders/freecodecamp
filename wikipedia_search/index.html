@@ -2,16 +2,21 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<title>Wikipedia Search</title>
 </head>
 <body>
-	<div class="container">
-
-		<div class="form-group">
-			<input type='text' id='search' placeholder='search'></input>
+	
+	<div class="container initial-view">
+		<div class="form-group vertical-center" id='search-div'>
+			<i class="fa fa-search fa-3x search-icon"></i>
+			<input type='text' class='search-box' id='search' placeholder='search'></input>
 		</div>
+	</div>
+
+	<div class="container results-view">
 		<!-- test result -->
 		<!-- <a href="//en.wikipedia.org/wiki/cookie">
 			<div class='search-result'>
@@ -22,7 +27,6 @@
 				</dl>
 			</div>
 		</a> -->
-		
 	</div>
 
 	<script type="text/javascript" src="js/script.js"></script>
