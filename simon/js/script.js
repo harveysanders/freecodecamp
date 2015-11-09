@@ -5,6 +5,11 @@
 	var yellowSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
 	var blueSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
 
+	var buttonColors = ['green-button', 'red-button', 'yellow-button', 'blue-button'];
+	var computerPlayButtons = [];
+	var userPlayButtons = [];
+
+
 	function activateButton(buttonColor) {
 		function toggleLight(buttonColor){
 			$('.' + buttonColor).toggleClass(buttonColor + '-lit');
@@ -35,23 +40,32 @@
 		}
 	}
 
+	function playCompNextMove() {
+		var randomButton = buttonColors[Math.floor(Math.random() * 4)];
+		computerPlayButtons.push(randomButton);
+		computerPlayButtons.map(function(computerPlayButton){
+			activateButton(computerPlayButton);
+		});
+	}
+
+	function checkUserPlay () {
+
+	}
+
 	function startGame() {
-		var buttonColors = ['green-button', 'red-button', 'yellow-button', 'blue-button'];
-		var selectedButtons = [];
-		function playNextMove() {
-			console.log('play started');
-			var randomButton = buttonColors[Math.floor(Math.random() * 4)];
-			selectedButtons.push(randomButton);
-			console.log(selectedButtons);
-			selectedButtons.map(function(selectedButton){
-				activateButton(selectedButton);
-			});
-		}
-		playNextMove();
+		computerPlayButtons = [];
+		userPlayButtons = [];
+		playCompNextMove();
 	}
 
 	$('.game-button').on('click', function(e){
 		activateButton(e.target.id);
+		userPlayButtons.push(e.target.id);
+
+		checkUserPlay();
+
+		console.log('CPU moves: ' + computerPlayButtons);
+		console.log('player moves: ' + userPlayButtons);
 	});
 
 	$('.start-button').on('click', function(){
