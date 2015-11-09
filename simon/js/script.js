@@ -1,10 +1,5 @@
 (function(){
 
-	var $greenButton = $('#green-button');
-	var $redButton = $('#red-button');
-	var $yellowButton = $('#yellow-button');
-	var $blueButton = $('#blue-button');
-
 	var greenSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3');
 	var redSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3');
 	var yellowSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
@@ -40,10 +35,27 @@
 		}
 	}
 
+	function startGame() {
+		var buttonColors = ['green-button', 'red-button', 'yellow-button', 'blue-button'];
+		var selectedButtons = [];
+		function playNextMove() {
+			console.log('play started');
+			var randomButton = buttonColors[Math.floor(Math.random() * 4)];
+			selectedButtons.push(randomButton);
+			console.log(selectedButtons);
+			selectedButtons.map(function(selectedButton){
+				activateButton(selectedButton);
+			});
+		}
+		playNextMove();
+	}
+
 	$('.game-button').on('click', function(e){
 		activateButton(e.target.id);
-
 	});
 
+	$('.start-button').on('click', function(){
+		startGame();
+	});
 
 })();
