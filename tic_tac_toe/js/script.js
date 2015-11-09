@@ -10,9 +10,10 @@
 	});
 
 	$('.square').on('click', function(e){
-		var spaceNum = target.className.charAt(0);
+		var spaceNum = e.target.className.charAt(0);
 		var location = '#' + e.target.id;
 		handlePlayerMove(location);
+		computerMove();
 	});
 
 	function handlePlayerMove(location){
