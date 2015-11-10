@@ -93,19 +93,18 @@ function smallestCommons(arr) {
     var currMulitple = highNum;
 
     var currDivisor; 
-    divisor === undefined ? currDivisor = (max - 1) : currDivisor = divisor;
+    currDivisor = divisor === undefined ? (max - 1) : divisor;
 
     //if (num % divisible by nextNumInRange?
     if (currDivisor >= lowNum){
-        if (currMulitple % currDivisor === 0){
-          if (currDivisor === lowNum){return currMulitple;} else {
-            //check if num is divisible by num after that
-            return getMultiple(currMulitple, lowNum, (currDivisor - 1));
-          }
-        } else { //if not, add original num to num and try again
-            
-          return getMultiple((currMulitple + max), lowNum);
+      if (currMulitple % currDivisor === 0){
+        if (currDivisor === lowNum){return currMulitple;} else {
+          //check if num is divisible by num after that
+          return getMultiple(currMulitple, lowNum, (currDivisor - 1));
         }
+      } else { //if not, add original num to num and try again 
+        return getMultiple((currMulitple + max), lowNum);
+      }
     }
   } 
   return getMultiple(max, min);
