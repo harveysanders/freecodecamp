@@ -6,8 +6,11 @@
 	var blueSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
 
 	var buttonColors = ['green-button', 'red-button', 'yellow-button', 'blue-button'];
-	var computerPlayButtons = [];
-	var userPlayButtons = [];
+	var gameStarted = false;
+	var computerPlayButtons,
+		userPlayButtons,
+		playCount
+		;
 
 
 	function activateButton(buttonColor) {
@@ -40,31 +43,51 @@
 		}
 	}
 
-	function playCompNextMove() {
+	function createCpuNextMove() {
 		var randomButton = buttonColors[Math.floor(Math.random() * 4)];
 		computerPlayButtons.push(randomButton);
+	}	
+
+	function playCpuMoves(){
 		computerPlayButtons.map(function(computerPlayButton){
 			activateButton(computerPlayButton);
 		});
+		playCount = 0;
 	}
 
-	function checkUserPlay () {
-
+	function checkRound(playCount) {
+		if(checkUserPlay(playCount)) {
+			console.log('correct!');
+			playCount++;
+			if (playCount >= computerPlayButtons.length) {
+				playCount = 0;
+				createCpuNextMove();
+				playCpuMoves();
+			} else checkRound(playCount);
+		} else {
+			console.log('wrong...wrong..');
+			playCpuMoves();
+		}
+		function checkUserPlay (playCount) {
+			return computerPlayButtons[playCount] === userPlayButtons[playCount] ? true : false;
+		}
 	}
 
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
-		playCompNextMove();
+		createCpuNextMove();
+		playCpuMoves();
 	}
 
 	$('.game-button').on('click', function(e){
-		activateButton(e.target.id);
-		userPlayButtons.push(e.target.id);
+		var buttonColor = e.target.id;
+		
+		activateButton(buttonColor);
+		userPlayButtons.push(buttonColor);
 
-		checkUserPlay();
+		checkRound(playCount);
 
-		console.log('CPU moves: ' + computerPlayButtons);
 		console.log('player moves: ' + userPlayButtons);
 	});
 
