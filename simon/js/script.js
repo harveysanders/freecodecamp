@@ -9,7 +9,8 @@
 	var gameStarted = false;
 	var computerPlayButtons,
 		userPlayButtons,
-		playCount
+		playCount,
+		timeBetweenMove
 		;
 
 
@@ -49,9 +50,18 @@
 	}	
 
 	function playCpuMoves(timeBetweenMove){
-		computerPlayButtons.map(function(computerPlayButton){
-			activateButton(computerPlayButton);
-		});
+		function setPlayDelay(i) {
+			setTimeout(function() {
+				console.log(computerPlayButtons[i]);
+				activateButton(computerPlayButtons[i]);
+			}, timeBetweenMove);
+		}
+		for (var i = 0; i < computerPlayButtons.length; i++){
+			setPlayDelay(i);
+		}
+		// computerPlayButtons.map(function(computerPlayButton){
+		// 	activateButton(computerPlayButton);
+		// });
 		playCount = 0;
 	}
 
@@ -61,11 +71,11 @@
 			if (playCount >= computerPlayButtons.length - 1) {
 				playCount = 0;
 				createCpuNextMove();
-				playCpuMoves();
+				playCpuMoves(timeBetweenMove);
 			} else checkRound(playCount);
 		} else {
 			console.log('wrong...wrong..');
-			playCpuMoves();
+			playCpuMoves(timeBetweenMove);
 		}
 		playCount++;
 
@@ -77,6 +87,7 @@
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
+		timeBetweenMove = 2000;
 
 		//test
 		for (var i=0; i < 6; i++) {
@@ -84,7 +95,7 @@
 		}
 		createCpuNextMove();
 		console.log(computerPlayButtons);
-		playCpuMoves();
+		playCpuMoves(timeBetweenMove);
 	}
 
 	$('.game-button').on('click', function(e){
