@@ -50,14 +50,14 @@
 	}	
 
 	function playCpuMoves(timeBetweenMove){
-
+		//http://brackets.clementng.me/post/24150213014/example-of-a-javascript-closure-settimeout-inside
 		for (var i = 0; i <= computerPlayButtons.length; i++) {
 	    	setTimeout((function(x) {
 	    		return function() {
 	    			console.log(computerPlayButtons[x]);
 	    			activateButton(computerPlayButtons[x]);
 	    		}; 
-	    	})(i), 1000 * i);
+	    	})(i), timeBetweenMove * i);
 		}
 		
 		playCount = 0;
@@ -85,7 +85,7 @@
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
-		timeBetweenMove = 2000;
+		timeBetweenMove = 1000;
 
 		//test
 		for (var i=0; i < 6; i++) {
