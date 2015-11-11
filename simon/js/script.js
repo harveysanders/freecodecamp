@@ -50,18 +50,16 @@
 	}	
 
 	function playCpuMoves(timeBetweenMove){
-		function setPlayDelay(i) {
-			setTimeout(function() {
-				console.log(computerPlayButtons[i]);
-				activateButton(computerPlayButtons[i]);
-			}, timeBetweenMove);
+
+		for (var i = 0; i <= computerPlayButtons.length; i++) {
+	    	setTimeout((function(x) {
+	    		return function() {
+	    			console.log(computerPlayButtons[x]);
+	    			activateButton(computerPlayButtons[x]);
+	    		}; 
+	    	})(i), 1000 * i);
 		}
-		for (var i = 0; i < computerPlayButtons.length; i++){
-			setPlayDelay(i);
-		}
-		// computerPlayButtons.map(function(computerPlayButton){
-		// 	activateButton(computerPlayButton);
-		// });
+		
 		playCount = 0;
 	}
 
