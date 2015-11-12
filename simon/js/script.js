@@ -51,34 +51,40 @@
 
 	function playCpuMoves(timeBetweenMove){
 		//http://brackets.clementng.me/post/24150213014/example-of-a-javascript-closure-settimeout-inside
-		for (var i = 0; i <= computerPlayButtons.length; i++) {
-	    	setTimeout((function(x) {
-	    		return function() {
-	    			console.log(computerPlayButtons[x]);
-	    			activateButton(computerPlayButtons[x]);
-	    		}; 
-	    	})(i), timeBetweenMove * i);
-		}
+		setTimeout(function(){
+			for (var i = 0; i <= computerPlayButtons.length; i++) {
+		    	setTimeout((function(x) {
+		    		return function() {
+		    			activateButton(computerPlayButtons[x]);
+		    		}; 
+		    	})(i), timeBetweenMove * i);
+			}
+		}, 800);
 		
+		console.log(computerPlayButtons);
+	}
+
+	function resetUser(){
 		playCount = 0;
+		userPlayButtons = [];
 	}
 
 	function checkRound(playCount) {
-		if(checkUserPlay(playCount)) {
+		if (checkUserPlay()) {
 			console.log('correct!');
-			if (playCount >= computerPlayButtons.length - 1) {
-				playCount = 0;
+			if (playCount === computerPlayButtons.length) {
 				createCpuNextMove();
 				playCpuMoves(timeBetweenMove);
-			} else checkRound(playCount);
+				resetUser();
+			}
 		} else {
-			console.log('wrong...wrong..');
-			playCpuMoves(timeBetweenMove);
+			console.log('wrong!');
+			playCpuMoves();
+			resetUser();
 		}
-		playCount++;
 
-		function checkUserPlay (playCount) {
-			return computerPlayButtons[playCount] === userPlayButtons[playCount] ? true : false;
+		function checkUserPlay () {
+			return computerPlayButtons[playCount-1] === userPlayButtons[playCount-1] ? true : false;
 		}
 	}
 
@@ -86,21 +92,22 @@
 		computerPlayButtons = [];
 		userPlayButtons = [];
 		timeBetweenMove = 1000;
+		playCount = 0;
 
 		//test
-		for (var i=0; i < 6; i++) {
-			createCpuNextMove();
-		}
+		// for (var i=0; i < 6; i++) {
+		// 	createCpuNextMove();
+		// }
 		createCpuNextMove();
-		console.log(computerPlayButtons);
 		playCpuMoves(timeBetweenMove);
 	}
 
 	$('.game-button').on('click', function(e){
 		var buttonColor = e.target.id;
-		
+
 		activateButton(buttonColor);
 		userPlayButtons.push(buttonColor);
+		playCount++;
 
 		checkRound(playCount);
 
