@@ -2,6 +2,7 @@
 	width: 600px;
 	height: 600px;
 	margin: 0 auto;
+
 }
 
 .game-board{
@@ -11,8 +12,15 @@
 	border-radius: 50%;
 	clip-path: circle;
 	overflow: hidden;
-	
 }
+
+.background-flash {
+	-webkit-transition: background-color .2s ease;
+	-moz-transition: background-color .2s ease;
+	-o-transition: background-color .2s ease;
+	transition: background-color .2s ease;
+}
+
 .game-button{
 	width: 50%;
 	height: 50%;
@@ -52,4 +60,8 @@
 
 .blue-button-lit {
 	background-color: blue;
+}
+
+.flash-red {
+	background-color: red;
 }
