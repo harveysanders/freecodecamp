@@ -61,7 +61,7 @@
 		    		}; 
 		    	})(i), timeBetweenMoves * i);
 			}
-		}, 800); //delay for CPU response
+		}, 1500); //delay for CPU response
 		
 		updateHUD();
 		console.log(computerPlayButtons);
