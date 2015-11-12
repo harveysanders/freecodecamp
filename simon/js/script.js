@@ -4,13 +4,15 @@
 	var redSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3');
 	var yellowSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
 	var blueSound = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
+	var wrongBuzzer = new Audio('http://www.tvdsb.ca/webpages/balestrins/files/voicebuzzer.mp3');
 
 	var buttonColors = ['green-button', 'red-button', 'yellow-button', 'blue-button'];
 	var gameStarted = false;
 	var computerPlayButtons,
 		userPlayButtons,
 		playCount,
-		timeBetweenMoves
+		timeBetweenMoves,
+		strictMode
 		;
 
 
@@ -61,6 +63,7 @@
 			}
 		}, 800); //delay for CPU response
 		
+		updateHUD();
 		console.log(computerPlayButtons);
 	}
 
@@ -79,8 +82,16 @@
 			}
 		} else {
 			console.log('wrong!');
-			playCpuMoves();
-			resetUser();
+			wrongBuzzer.play();
+			$('.background-flash').toggleClass('flash-red');
+			setTimeout(function(){$('.background-flash').toggleClass('flash-red');}, 500);
+			if (strictMode) {
+				startGame();
+			} else {
+				playCpuMoves();
+				resetUser();
+			}
+			
 		}
 
 		function checkUserPlay () {
@@ -88,16 +99,17 @@
 		}
 	}
 
+	function updateHUD(){
+		$('.step-count').text(computerPlayButtons.length);
+	}
+
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
 		timeBetweenMoves = 1000;
 		playCount = 0;
+		strictMode = false;
 
-		//test
-		// for (var i=0; i < 6; i++) {
-		// 	createCpuNextMove();
-		// }
 		createCpuNextMove();
 		playCpuMoves();
 	}
@@ -118,7 +130,13 @@
 		startGame();
 	});
 
-	
+	$('#strict-mode-toggle').change(function(){
+		if($('#strict-mode-toggle').is(':checked')) {
+			strictMode = true;
+		} else {
+			strictMode = false;
+		}
+	});
 	
 
 
