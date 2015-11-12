@@ -76,9 +76,7 @@
 		if (checkUserPlay()) {
 			console.log('correct!');
 			if (playCount === computerPlayButtons.length) {
-				createCpuNextMove();
-				playCpuMoves();
-				resetUser();
+				startNextRound(computerPlayButtons.length + 1);
 			}
 		} else {
 			console.log('wrong!');
@@ -90,8 +88,7 @@
 			} else {
 				playCpuMoves();
 				resetUser();
-			}
-			
+			}	
 		}
 
 		function checkUserPlay () {
@@ -101,6 +98,26 @@
 
 	function updateHUD(){
 		$('.step-count').text(computerPlayButtons.length);
+	}
+
+	function startNextRound(roundNum) {
+		if (roundNum > 20) {
+			console.log('you win!');
+			startGame();
+		} else if (roundNum >= 13) {
+			console.log('speed increased');
+			timeBetweenMoves = 100;
+		} else if (roundNum >= 9) {
+			console.log('speed increased');
+			timeBetweenMoves = 400;
+		} else if (roundNum >= 5) {
+			console.log('speed increased');
+			timeBetweenMoves = 600;
+		}
+
+		createCpuNextMove();
+		playCpuMoves();
+		resetUser();
 	}
 
 	function startGame() {
@@ -122,8 +139,6 @@
 		playCount++;
 
 		checkRound(playCount);
-
-		console.log('player moves: ' + userPlayButtons);
 	});
 
 	$('.start-button').on('click', function(){
@@ -138,8 +153,5 @@
 		}
 	});
 	
-
-
-
 
 })();
