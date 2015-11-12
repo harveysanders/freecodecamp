@@ -10,7 +10,7 @@
 	var computerPlayButtons,
 		userPlayButtons,
 		playCount,
-		timeBetweenMove
+		timeBetweenMoves
 		;
 
 
@@ -49,7 +49,7 @@
 		computerPlayButtons.push(randomButton);
 	}	
 
-	function playCpuMoves(timeBetweenMove){
+	function playCpuMoves(){
 		//http://brackets.clementng.me/post/24150213014/example-of-a-javascript-closure-settimeout-inside
 		setTimeout(function(){
 			for (var i = 0; i <= computerPlayButtons.length; i++) {
@@ -57,9 +57,9 @@
 		    		return function() {
 		    			activateButton(computerPlayButtons[x]);
 		    		}; 
-		    	})(i), timeBetweenMove * i);
+		    	})(i), timeBetweenMoves * i);
 			}
-		}, 800);
+		}, 800); //delay for CPU response
 		
 		console.log(computerPlayButtons);
 	}
@@ -74,7 +74,7 @@
 			console.log('correct!');
 			if (playCount === computerPlayButtons.length) {
 				createCpuNextMove();
-				playCpuMoves(timeBetweenMove);
+				playCpuMoves();
 				resetUser();
 			}
 		} else {
@@ -91,7 +91,7 @@
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
-		timeBetweenMove = 1000;
+		timeBetweenMoves = 1000;
 		playCount = 0;
 
 		//test
@@ -99,7 +99,7 @@
 		// 	createCpuNextMove();
 		// }
 		createCpuNextMove();
-		playCpuMoves(timeBetweenMove);
+		playCpuMoves();
 	}
 
 	$('.game-button').on('click', function(e){
