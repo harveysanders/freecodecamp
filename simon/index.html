@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="//localhost:8081/jquery-2.1.3.min.js"></script>
 	 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+	 <link href='https://fonts.googleapis.com/css?family=Teko:700|Source+Sans+Pro' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
@@ -16,11 +17,17 @@
 			<div class="game-button yellow-button" id="yellow-button"></div>
 			<div class="game-button blue-button" id="blue-button"></div>
 		</div>
-		<div class="HUD">
-			Count: <span class="step-count"></span>
+		<div class="controls-area">
+			<div class="controls">
+				<span class="logo">Simon</span>
+				<div class="HUD">
+				COUNT: <span class="step-count"></span>
+				</div>
+				<button class='start-button'>START</button>
+				<input type="checkbox" id="strict-mode-toggle">STRICT</input>
+			</div>
 		</div>
-		<button class='start-button'>Start</button>
-		<input type="checkbox" id="strict-mode-toggle">Strict Mode</input>
+
 	</div>
 	<script type="text/javascript" src="js/script.js"></script>
 </body>
