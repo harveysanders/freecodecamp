@@ -1,3 +1,8 @@
+body {
+	background-image: url('http://thumbs.dreamstime.com/t/seamless-background-s-abstract-geometric-pattern-retro-memphis-style-fashion-can-be-used-printing-website-backdrop-58155619.jpg');
+	background-size: 150px;
+}
+
 .container{
 	position: relative;
 	width: 600px;
