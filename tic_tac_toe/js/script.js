@@ -4,6 +4,7 @@
 	var cpuLetter = '';
 	var availableSpaces = ['1','2','3','4','5','6','7','8','9'];
 	var corners = ['1', '3', '7', '9'];
+	var edges = ['2', '4', '6', '8'];
 
 	$('.player-choice').on('click', function(e){
 		playerLetter = e.target.id;
@@ -28,6 +29,7 @@
 		var playedSpaces = Array.prototype.slice.call(arguments);
 		availableSpaces = _.difference(availableSpaces, playedSpaces);
 		corners = _.intersection(corners, availableSpaces);
+		edges = _.intersection(edges, availableSpaces);
 		console.log('remaining spaces: ' + availableSpaces);
 	}
 
@@ -44,6 +46,10 @@
 
 		function chooseCorner() {
 			return '#' + corners[Math.floor(Math.random() * corners.length)];
+		}
+
+		function chooseEdge() {
+			return '#' + edges[Math.floor(Math.random() * edges.length)];
 		}
 	}
 
