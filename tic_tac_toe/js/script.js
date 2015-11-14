@@ -26,24 +26,31 @@
 
 	function computerMove(playerLocation){
 		if (playerLocation === '5') {
-			var space = chooseCorner();
-			cpuMoves.push(space);
-			displayLetter(cpuLetter, space);
-			removePlayedSpaces(space, playerLocation);
-		} else if (corners.indexOf(playerLocation) > -1) {
-			cpuMoves.push('5');
-			displayLetter(cpuLetter, '5');
-			removePlayedSpaces('5', playerLocation);
+			playCpuMove(chooseCorner());	
+		} else if ((corners.indexOf(playerLocation ) > -1) && ($('#5').html() === '')) {
+			playCpuMove('5');
 		} else if (edges.indexOf(playerLocation) > -1) {
 			$()
+		} else {
+			playCpuMove(chooseAnyAvailSpace());
 		}
 
 		function chooseCorner() {
-			return corners[Math.floor(Math.random() * corners.length)];
+			return getRandomElement(corners);
 		}
 
 		function chooseEdge() {
-			return edges[Math.floor(Math.random() * edges.length)];
+			return getRandomElement(edges);
+		}
+
+		function chooseAnyAvailSpace() {
+			return getRandomElement(availableSpaces);
+		}
+
+		function playCpuMove(location) {
+			cpuMoves.push(location);
+			displayLetter(cpuLetter, location);
+			removePlayedSpaces(location, playerLocation);
 		}
 	}
 
@@ -59,7 +66,12 @@
 		}
 		$(convertToID(location)).html(letter);
 	}
+	// ---------------------- HELPER FUNCTIONS -------------------------------//
 
+	function getRandomElement(array) {
+		return array[Math.floor(Math.random() * array.length)];
+	}
+	// ----------------------^^ HELPER FUNCTIONS ^^-------------------------------//	
 	$('.player-choice').on('click', function(e){
 		playerLetter = e.target.id;
 		cpuLetter = playerLetter === 'X' ? 'O' : 'X';
@@ -71,6 +83,7 @@
 		var spaceNum = e.target.className.charAt(0);
 		var location = e.target.id;
 
+		//prevent user overwite of played square
 		if ($('#' + location).html() === '') {
 			handlePlayerMove(location);
 			computerMove(location);
