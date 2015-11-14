@@ -47,7 +47,7 @@
 	}
 
 	function createCpuNextMove() {
-		var randomButton = buttonColors[Math.floor(Math.random() * 4)];
+		var randomButton = buttonColors[Math.floor(Math.random() * buttonColors.length)];
 		computerPlayButtons.push(randomButton);
 	}	
 
@@ -106,13 +106,13 @@
 			startGame();
 		} else if (roundNum >= 13) {
 			console.log('speed increased');
-			timeBetweenMoves = 100;
+			timeBetweenMoves = timeBetweenMoves * 0.1;
 		} else if (roundNum >= 9) {
 			console.log('speed increased');
-			timeBetweenMoves = 400;
+			timeBetweenMoves = timeBetweenMoves * 0.25;
 		} else if (roundNum >= 5) {
 			console.log('speed increased');
-			timeBetweenMoves = 600;
+			timeBetweenMoves = timeBetweenMoves * 0.5;
 		}
 
 		createCpuNextMove();
@@ -123,7 +123,7 @@
 	function startGame() {
 		computerPlayButtons = [];
 		userPlayButtons = [];
-		timeBetweenMoves = 1000;
+		timeBetweenMoves = 500;
 		playCount = 0;
 		strictMode = false;
 
