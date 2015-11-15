@@ -6,13 +6,15 @@
 	var corners = ['1', '3', '7', '9'];
 	var edges = ['2', '4', '6', '8'];
 	var winningSequences = [['1', '2', '3'], ['4','5','6'], ['7','8','9'], ['1','4','7'], ['2','5','8'], ['3','6','9'], ['1','5','9'], ['3','5','7']];
-	var winningSequencesStrings = ["123", "456", "789", "147", "258", "369", "159", "357"];
 	var playerMoves = [];
 	var cpuMoves = [];
+
+	// ------------------------- Test Area
 
 	function handlePlayerMove(location){
 		playerMoves.push(location);
 		displayLetter(playerLetter, location);
+		removePlayedSpaces(location);
 	}
 
 	function removePlayedSpaces(playedSpaces){
@@ -25,24 +27,45 @@
 
 
 	function computerMove(playerLocation){
+		var centerOpen = $('#5').html() === '';
 		if (playerLocation === '5') {
 			playCpuMove(chooseCorner());	
-		} else if ((corners.indexOf(playerLocation ) > -1) && ($('#5').html() === '')) {
+		} else if (centerOpen) {
 			playCpuMove('5');
+		}else if (corners.indexOf(playerLocation ) > -1) {
+			playCpuMove(chooseCorner());
 		} else if (edges.indexOf(playerLocation) > -1) {
-			$()
+			switch(playerLocation) {
+				case '2':
+					var spacesNotToPlay = _.union(playerMoves, cpuMoves, ['1','3']);		
+					break;
+				case '4':
+					var spacesNotToPlay = _.union(playerMoves, cpuMoves, ['1','7']);		
+					break;
+				case '6':
+					var spacesNotToPlay = _.union(playerMoves, cpuMoves, ['3','9']);		
+					break;
+				case '8':
+					var spacesNotToPlay = _.union(playerMoves, cpuMoves, ['7','9']);		
+					break;
+			}
+			playCpuMove(getRandomElement(_.difference(corners, spacesNotToPlay)));
+			
 		} else {
 			playCpuMove(chooseAnyAvailSpace());
 		}
 
 		function chooseCorner() {
-			return getRandomElement(corners);
+			return getRandomElement(_.difference(corners, availableSpaces));
 		}
 
 		function chooseEdge() {
 			return getRandomElement(edges);
 		}
 
+		function blockWin(){
+			
+		}
 		function chooseAnyAvailSpace() {
 			return getRandomElement(availableSpaces);
 		}
@@ -55,9 +78,17 @@
 	}
 
 	function checkForWin(playedSpaces){
-		return _.findIndex(winningSequences, function(seqArr) {
-			return (_.intersection(playedSpaces, seqArr) === seqArr );
+		var winningMatch = winningSequences.map(function(seqArr){
+			return _.intersection(seqArr, playedSpaces);
+		}).filter(function(seqArr){
+			return seqArr.length === 3;
 		});
+		if (winningMatch.length > 0) {
+			winningMatch[0].map(function(location){
+				$('#' + location).css('background-color', 'green');
+			});
+		}
+		return winningMatch.length > 0;
 	}
 
 	function displayLetter(letter, location) {
@@ -87,6 +118,12 @@
 		if ($('#' + location).html() === '') {
 			handlePlayerMove(location);
 			computerMove(location);
+			//check each move for win
+			if (checkForWin(playerMoves)) {
+				console.log('player wins!');
+			} else if (checkForWin(cpuMoves)){
+				console.log('cpu wins!');
+			}
 		}
 	});
 
