@@ -92,8 +92,7 @@ function smallestCommons(arr) {
   function getMultiple(highNum, lowNum, divisor) {
     var currMulitple = highNum;
 
-    var currDivisor; 
-    currDivisor = divisor === undefined ? (max - 1) : divisor;
+    var currDivisor = divisor === undefined ? (max - 1) : divisor;
 
     //if (num % divisible by nextNumInRange?
     if (currDivisor >= lowNum){
