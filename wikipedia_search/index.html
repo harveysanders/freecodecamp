@@ -3,20 +3,22 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Muli|Open+Sans' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<title>Wikipedia Search</title>
 </head>
-<body>
-	
+<body class="font-overide">
+	<h1 class="text-center">Search Wikipedia</h1>
 	<div class="container initial-view">
-		<div class="absoulte-center" id='search-div'>
-			<i class="fa fa-search fa-3x search-icon"></i>
+		<div class="text-center" id='search-div'>
+			<i class="fa fa-search fa-2x search-icon"></i>
 			<input type='text' class='search-box' id='search'></input>
 		</div>
 	</div>
 
 	<div class="container results-view">
+		<div class="search-results"></div>
 		<!-- test result -->
 		<!-- <a href="//en.wikipedia.org/wiki/cookie">
 			<div class='search-result'>

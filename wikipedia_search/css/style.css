@@ -1,6 +1,11 @@
 body{
 	background-color: #F7F6F2;
 	color: #747533;
+
+}
+
+.font-overide {
+	font-family: 'Muli', sans-serif;
 }
 
 @keyframes grow-search-box {
@@ -17,7 +22,7 @@ body{
 	/*margin: 0 auto;*/
 	outline: none;	
 	border-radius: 2em;
-	width: 2.6em;
+	/*width: 2.6em;*/
 	-webkit-transition: width 2s ease;
 	-moz-transition: width 2s ease;
 	-o-transition: width 2s ease;
