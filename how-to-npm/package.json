@@ -1,0 +1,19 @@
+{
+  "name": "how-to-npm",
+  "version": "1.0.2",
+  "description": "how to npm test package",
+  "dist-tags": { "latest" : "1.0.2"},
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/harveysanders/freecodecamp.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "harvey sanders",
+  "license": "ISC",
+  "dependencies": {
+    "@linclark/pkg": "^1.0.2"
+  }
+}
