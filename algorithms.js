@@ -1,3 +1,166 @@
+//Advanced Algorithm
+for(var i=0; i<100; i++ ){
+  if(i % 2 === 0) {
+    console.log('recursions rules');  
+  }
+  else {
+    console.log('recursions sucks');  
+  }
+  
+}
+
+function permAlone (str) {
+  
+}
+
+function inventory(curInv, newInv) {
+    // All inventory must be accounted for or you're fired!
+    var test = newInv.map(function(newItem){
+      return curInv.map(function(curItem){
+        if (newItem[1] === curItem[1]) {
+          curItem[0] += newItem[0];
+        }
+        return curItem.indexOf(newItem[1]);
+      }).every(function(nameIndex){
+        return nameIndex < 0;
+      });
+    });
+
+    test.forEach(function(bool, index){
+      if (bool) {curInv.push(newInv[index]);}
+    });
+    return curInv;
+}
+
+// Example inventory lists
+var curInv = [
+    [21, "Bowling Ball"],
+    [2, "Dirty Sock"],
+    [1, "Hair Pin"],
+    [5, "Microphone"]
+];
+
+var newInv = [
+    [2, "Hair Pin"],
+    [3, "Half-Eaten Apple"],
+    [67, "Bowling Ball"],
+    [7, "Toothpaste"]
+];
+
+console.log(inventory(curInv, newInv));
+
+function drawer(price, cash, cid) {
+  var change;
+  // Here is your change, ma'am.
+  return change;
+}
+
+// Example cash-in-drawer array:
+// [["PENNY", 1.01],
+// ["NICKEL", 2.05],
+// ["DIME", 3.10],
+// ["QUARTER", 4.25],
+// ["ONE", 90.00],
+// ["FIVE", 55.00],
+// ["TEN", 20.00],
+// ["TWENTY", 60.00],
+// ["ONE HUNDRED", 100.00]]
+
+drawer(19.50, 20.00, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.10], ["QUARTER", 4.25], ["ONE", 90.00], ["FIVE", 55.00], ["TEN", 20.00], ["TWENTY", 60.00], ["ONE HUNDRED", 100.00]]);
+
+
+function sym(args) {
+  var arrays = Array.prototype.slice.call(arguments);
+  var results = [];
+
+  return arrays.reduce(function(prevArr, currArr) {
+    return prevArr.filter(function(numInPrev){
+      return currArr.indexOf(numInPrev) < 0;   
+    });
+  });
+ } 
+
+// sym([1, 2, 3], [5, 2, 1, 4]) should return [3, 5, 4].
+// sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]) should return [1, 4, 5].
+
+function telephoneCheck(str) {
+  // Good luck!
+  return /1?\s?\d{3}-?\d{3}-?\d{4}/.test(str);
+}
+
+telephoneCheck("555-555-5555");
+
+//Upper Intermediate Algorithm Scripting
+
+function pairwise(arr, arg) {
+  var indicies = [];
+
+  arr.map(function(outerNum, outerIndex){
+    arr.map(function(innerNum, innerIndex) {
+      if (outerIndex !== innerIndex && indicies.indexOf(outerIndex) < 0 && indicies.indexOf(innerIndex) < 0) {
+        if (outerNum + innerNum === arg){indicies.push(outerIndex, innerIndex);}
+      }
+    });
+  });
+
+  return indicies.reduce(function(prev, curr){
+    return prev + curr;
+  },0);
+}
+
+pairwise([1,4,2,3,0,5], 7);
+
+function orbitalPeriod(arr) {
+  var GM = 398600.4418;
+  var earthRadius = 6367.4447;
+
+  return arr.map(function(element){
+    return {
+      name: element.name,
+      orbitalPeriod: Math.round(2 * Math.PI * Math.sqrt(Math.pow(element.avgAlt + earthRadius, 3) / GM))
+    };
+  });
+}
+
+orbitalPeriod([{name : "sputnik", avgAlt : 35873.5553}]);
+
+
+var Person = function(firstAndLast) {
+  var names = firstAndLast.split(' ');
+
+  this.getFirstName = function(){
+    return names[0];
+  };
+
+  this.getLastName = function(){
+    return names[1];
+  };
+
+  this.getFullName = function(){
+    return names[0] + ' ' + names[1];
+  };
+
+  this.setFirstName = function(first){
+    return names[0] = first;
+  };
+
+  this.setLastName = function(last){
+    return names[1] = last;
+  };
+
+  this.setFullName = function(firstAndLast){
+    return names = firstAndLast.split(' ');
+  };
+  
+  return firstAndLast;
+
+};
+
+var bob = new Person('Bob Ross');
+bob.getFullName();
+
+
+
 function add() {
   var args = Array.prototype.slice.call(arguments); 
   var areAllNums = args.map(function(arg){
