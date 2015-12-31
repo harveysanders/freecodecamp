@@ -1,20 +1,11 @@
 //Advanced Algorithm
-for(var i=0; i<100; i++ ){
-  if(i % 2 === 0) {
-    console.log('recursions rules');  
-  }
-  else {
-    console.log('recursions sucks');  
-  }
-  
-}
 
 function permAlone (str) {
   
 }
 
 function inventory(curInv, newInv) {
-    // All inventory must be accounted for or you're fired!
+    // All inventory must be accounted for or you're fired! 
     var test = newInv.map(function(newItem){
       return curInv.map(function(curItem){
         if (newItem[1] === curItem[1]) {
@@ -29,59 +20,115 @@ function inventory(curInv, newInv) {
     test.forEach(function(bool, index){
       if (bool) {curInv.push(newInv[index]);}
     });
-    return curInv;
+
+    function compare(a, b) {
+      if (a[1] < b[1]) {
+        return -1;
+      }
+      if (a[1] > b[1]) {
+        return 1;
+      }
+      return 0;
+    }
+
+    return curInv.sort(compare);
 }
-
-// Example inventory lists
-var curInv = [
-    [21, "Bowling Ball"],
-    [2, "Dirty Sock"],
-    [1, "Hair Pin"],
-    [5, "Microphone"]
-];
-
-var newInv = [
-    [2, "Hair Pin"],
-    [3, "Half-Eaten Apple"],
-    [67, "Bowling Ball"],
-    [7, "Toothpaste"]
-];
-
-console.log(inventory(curInv, newInv));
 
 function drawer(price, cash, cid) {
-  var change;
-  // Here is your change, ma'am.
-  return change;
+  var drawerTotal = getDrawerTotal(cid);
+  var changeDue = cash - price;
+  var change = [];
+
+  cid = cid.reverse();
+
+  function createChangeArray() {
+    var change = [];
+    var remainder = changeDue;
+    var multipliers = [100, 20, 10, 5, 1, 0.25, 0.1, 0.05, 0.01];
+
+    cid.forEach(function(denomAmt, index) {
+      var x = multipliers[index];
+      if (remainder >= denomAmt[1]) {
+        change.push(denomAmt);
+        remainder -= denomAmt[1];
+      } else if (denomAmt[1] - remainder >= 0) {
+        // 16.73, 55
+        var denomChange = (Math.floor(round(remainder / x, 2))) * x;
+        if (denomChange !==0) {change.push([denomAmt[0], denomChange]);}
+        remainder -= denomChange;
+      }
+    });
+    if (getDrawerTotal(change) < changeDue) {
+      return 'Insufficient Funds'
+    } else 
+      return change;
+  }
+  
+  if (drawerTotal < changeDue) {
+    return 'Insufficient Funds';
+  } else if (drawerTotal === changeDue) {
+    return 'Closed';
+  } else
+    return createChangeArray();
+
+  function getDrawerTotal(cid) {
+    var total = null;
+    cid.forEach(function(denomAmt) {
+      total += denomAmt[1];
+    });
+
+    return total;
+  }
+
+  //http://www.jacklmoore.com/notes/rounding-in-javascript/
+  function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }
 }
-
-// Example cash-in-drawer array:
-// [["PENNY", 1.01],
-// ["NICKEL", 2.05],
-// ["DIME", 3.10],
-// ["QUARTER", 4.25],
-// ["ONE", 90.00],
-// ["FIVE", 55.00],
-// ["TEN", 20.00],
-// ["TWENTY", 60.00],
-// ["ONE HUNDRED", 100.00]]
-
-drawer(19.50, 20.00, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.10], ["QUARTER", 4.25], ["ONE", 90.00], ["FIVE", 55.00], ["TEN", 20.00], ["TWENTY", 60.00], ["ONE HUNDRED", 100.00]]);
 
 
 function sym(args) {
-  var arrays = Array.prototype.slice.call(arguments);
+  var arrays = Array.prototype.slice.call(arguments); //make an array copy of arguments object
   var results = [];
 
-  return arrays.reduce(function(prevArr, currArr) {
-    return prevArr.filter(function(numInPrev){
-      return currArr.indexOf(numInPrev) < 0;   
+  function unique(array) {
+    return array.filter(function(element, index) {
+      return array.indexOf(element) === index;
     });
-  });
+  }
+
+  arrays = arrays.map(unique); //remove any duplicate elements
+
+  return arrays.reduce(function(symDiff, currArr) {
+    return symDiff.concat(currArr.filter(function(num) {
+      var i = symDiff.indexOf(num); 
+      if (i === -1) {
+        return true;
+      } else
+        symDiff.splice(i, 1);
+        return false;
+    }));
+  }, []);
+
  } 
+
+function cc(arrs) {
+ var arrays = Array.prototype.slice.call(arguments);
+ return arrays.reduce(function(flat, toAdd) {
+  return flat.concat(toAdd);
+ }, []);
+}
+
+//check if nums in array are unique
+// check if each num is in the prev Arr.
+// if not, return num
+// if num is already in prev array, remove num from prev array
+// then concatenate symetric difference array with curr array
 
 // sym([1, 2, 3], [5, 2, 1, 4]) should return [3, 5, 4].
 // sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]) should return [1, 4, 5].
+
+
 
 function telephoneCheck(str) {
   // Good luck!
@@ -159,8 +206,6 @@ var Person = function(firstAndLast) {
 var bob = new Person('Bob Ross');
 bob.getFullName();
 
-
-
 function add() {
   var args = Array.prototype.slice.call(arguments); 
   var areAllNums = args.map(function(arg){
@@ -205,13 +250,6 @@ function drop(arr, func) {
 
   return currArr;
 }
-
-// drop([1, 2, 3, 4], function(n) {return n>= 3;}) should return [3, 4]
-// drop([1, 2, 3], function(n) {return n > 0; }) should return [1, 2, 3]
-// drop([1, 2, 3, 4], function(n) {return n > 5;}) should return []
-// drop([1, 2, 3, 7, 4], function(n) {return n>= 3}) should return [7, 4]
-
-
 
 function steamroller(arr) {
   // I'm a steamroller, baby
