@@ -1,7 +1,14 @@
+body {
+	background-image: url('http://thumbs.dreamstime.com/t/seamless-background-s-abstract-geometric-pattern-retro-memphis-style-fashion-can-be-used-printing-website-backdrop-58155619.jpg');
+	background-size: 150px;
+}
+
 .container{
+	position: relative;
 	width: 600px;
 	height: 600px;
 	margin: 0 auto;
+
 }
 
 .game-board{
@@ -11,25 +18,81 @@
 	border-radius: 50%;
 	clip-path: circle;
 	overflow: hidden;
-	
+	border: solid black 1em;
 }
+
+.controls-area {
+	position: absolute;
+	top:28%;
+	left:28%;
+	width: 50%;
+	height: 50%;
+	background-color: rgb(0,0,0);
+	border-radius: 50%;
+}
+
+.controls {
+	position: absolute;
+	top: 36px;
+	left: 18px;
+	text-align: center;
+	color: white;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+.logo {
+	font-family: 'Teko', sans-serof;
+	font-size: 7em;
+}
+
+.background-flash {
+	-webkit-transition: background-color .2s ease;
+	-moz-transition: background-color .2s ease;
+	-o-transition: background-color .2s ease;
+	transition: background-color .2s ease;
+}
+
 .game-button{
 	width: 50%;
 	height: 50%;
 	float: left;
+	-webkit-transition: background-color .2s ease;
+	-moz-transition: background-color .2s ease;
+	-o-transition: background-color .2s ease;
+	transition: background-color .2s ease;
 }
-#green-button{
+.green-button{
+	background-color: #005200;
+}
+
+.green-button-lit {
 	background-color: green;
 }
 
-#red-button{
+.red-button{
+	background-color: #8E0303;
+}
+
+.red-button-lit {
 	background-color: red;
 }
 
-#yellow-button{
+.yellow-button{
+	background-color: #C5AF02;
+}
+
+.yellow-button-lit {
 	background-color: yellow;
 }
 
-#blue-button{
+.blue-button{
+	background-color: #030396;
+}
+
+.blue-button-lit {
 	background-color: blue;
+}
+
+.flash-red {
+	background-color: red;
 }

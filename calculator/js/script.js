@@ -17,7 +17,7 @@
 	$numButton.on('click', function(event){
 		if (calcMem.length > 0) {
 			console.log($(event.target).text());
-			currNum = $(event.target).text();
+			currNum += $(event.target).text();
 			$calcDisplay.text(currNum);
 		} else {
 			currNum +=  $(event.target).text();

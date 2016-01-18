@@ -1,3 +1,211 @@
+//Advanced Algorithm
+
+function permAlone (str) {
+  
+}
+
+function inventory(curInv, newInv) {
+    // All inventory must be accounted for or you're fired! 
+    var test = newInv.map(function(newItem){
+      return curInv.map(function(curItem){
+        if (newItem[1] === curItem[1]) {
+          curItem[0] += newItem[0];
+        }
+        return curItem.indexOf(newItem[1]);
+      }).every(function(nameIndex){
+        return nameIndex < 0;
+      });
+    });
+
+    test.forEach(function(bool, index){
+      if (bool) {curInv.push(newInv[index]);}
+    });
+
+    function compare(a, b) {
+      if (a[1] < b[1]) {
+        return -1;
+      }
+      if (a[1] > b[1]) {
+        return 1;
+      }
+      return 0;
+    }
+
+    return curInv.sort(compare);
+}
+
+function drawer(price, cash, cid) {
+  var drawerTotal = getDrawerTotal(cid);
+  var changeDue = cash - price;
+  var change = [];
+
+  cid = cid.reverse();
+
+  function createChangeArray() {
+    var change = [];
+    var remainder = changeDue;
+    var multipliers = [100, 20, 10, 5, 1, 0.25, 0.1, 0.05, 0.01];
+
+    cid.forEach(function(denomAmt, index) {
+      var x = multipliers[index];
+      if (remainder >= denomAmt[1]) {
+        change.push(denomAmt);
+        remainder -= denomAmt[1];
+      } else if (denomAmt[1] - remainder >= 0) {
+        // 16.73, 55
+        var denomChange = (Math.floor(round(remainder / x, 2))) * x;
+        if (denomChange !==0) {change.push([denomAmt[0], denomChange]);}
+        remainder -= denomChange;
+      }
+    });
+    if (getDrawerTotal(change) < changeDue) {
+      return 'Insufficient Funds'
+    } else 
+      return change;
+  }
+  
+  if (drawerTotal < changeDue) {
+    return 'Insufficient Funds';
+  } else if (drawerTotal === changeDue) {
+    return 'Closed';
+  } else
+    return createChangeArray();
+
+  function getDrawerTotal(cid) {
+    var total = null;
+    cid.forEach(function(denomAmt) {
+      total += denomAmt[1];
+    });
+
+    return total;
+  }
+
+  //http://www.jacklmoore.com/notes/rounding-in-javascript/
+  function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }
+}
+
+
+function sym(args) {
+  var arrays = Array.prototype.slice.call(arguments); //make an array copy of arguments object
+  var results = [];
+
+  function unique(array) {
+    return array.filter(function(element, index) {
+      return array.indexOf(element) === index;
+    });
+  }
+
+  arrays = arrays.map(unique); //remove any duplicate elements
+
+  return arrays.reduce(function(symDiff, currArr) {
+    return symDiff.concat(currArr.filter(function(num) {
+      var i = symDiff.indexOf(num); 
+      if (i === -1) {
+        return true;
+      } else
+        symDiff.splice(i, 1);
+        return false;
+    }));
+  }, []);
+
+ } 
+
+function cc(arrs) {
+ var arrays = Array.prototype.slice.call(arguments);
+ return arrays.reduce(function(flat, toAdd) {
+  return flat.concat(toAdd);
+ }, []);
+}
+
+//check if nums in array are unique
+// check if each num is in the prev Arr.
+// if not, return num
+// if num is already in prev array, remove num from prev array
+// then concatenate symetric difference array with curr array
+
+// sym([1, 2, 3], [5, 2, 1, 4]) should return [3, 5, 4].
+// sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]) should return [1, 4, 5].
+
+
+
+function telephoneCheck(str) {
+  // Good luck!
+  return /1?\s?\d{3}-?\d{3}-?\d{4}/.test(str);
+}
+
+telephoneCheck("555-555-5555");
+
+//Upper Intermediate Algorithm Scripting
+
+function pairwise(arr, arg) {
+  var indicies = [];
+
+  arr.map(function(outerNum, outerIndex){
+    arr.map(function(innerNum, innerIndex) {
+      if (outerIndex !== innerIndex && indicies.indexOf(outerIndex) < 0 && indicies.indexOf(innerIndex) < 0) {
+        if (outerNum + innerNum === arg){indicies.push(outerIndex, innerIndex);}
+      }
+    });
+  });
+
+  return indicies.reduce(function(prev, curr){
+    return prev + curr;
+  },0);
+}
+
+pairwise([1,4,2,3,0,5], 7);
+
+function orbitalPeriod(arr) {
+  var GM = 398600.4418;
+  var earthRadius = 6367.4447;
+
+  return arr.map(function(element){
+    return {
+      name: element.name,
+      orbitalPeriod: Math.round(2 * Math.PI * Math.sqrt(Math.pow(element.avgAlt + earthRadius, 3) / GM))
+    };
+  });
+}
+
+orbitalPeriod([{name : "sputnik", avgAlt : 35873.5553}]);
+
+
+var Person = function(firstAndLast) {
+  var names = firstAndLast.split(' ');
+
+  this.getFirstName = function(){
+    return names[0];
+  };
+
+  this.getLastName = function(){
+    return names[1];
+  };
+
+  this.getFullName = function(){
+    return names[0] + ' ' + names[1];
+  };
+
+  this.setFirstName = function(first){
+    return names[0] = first;
+  };
+
+  this.setLastName = function(last){
+    return names[1] = last;
+  };
+
+  this.setFullName = function(firstAndLast){
+    return names = firstAndLast.split(' ');
+  };
+  
+  return firstAndLast;
+
+};
+
+var bob = new Person('Bob Ross');
+bob.getFullName();
+
 function add() {
   var args = Array.prototype.slice.call(arguments); 
   var areAllNums = args.map(function(arg){
@@ -43,13 +251,6 @@ function drop(arr, func) {
   return currArr;
 }
 
-// drop([1, 2, 3, 4], function(n) {return n>= 3;}) should return [3, 4]
-// drop([1, 2, 3], function(n) {return n > 0; }) should return [1, 2, 3]
-// drop([1, 2, 3, 4], function(n) {return n > 5;}) should return []
-// drop([1, 2, 3, 7, 4], function(n) {return n>= 3}) should return [7, 4]
-
-
-
 function steamroller(arr) {
   // I'm a steamroller, baby
   var results = [];
@@ -92,20 +293,18 @@ function smallestCommons(arr) {
   function getMultiple(highNum, lowNum, divisor) {
     var currMulitple = highNum;
 
-    var currDivisor; 
-    divisor === undefined ? currDivisor = (max - 1) : currDivisor = divisor;
+    var currDivisor = divisor === undefined ? (max - 1) : divisor;
 
     //if (num % divisible by nextNumInRange?
     if (currDivisor >= lowNum){
-        if (currMulitple % currDivisor === 0){
-          if (currDivisor === lowNum){return currMulitple;} else {
-            //check if num is divisible by num after that
-            return getMultiple(currMulitple, lowNum, (currDivisor - 1));
-          }
-        } else { //if not, add original num to num and try again
-            
-          return getMultiple((currMulitple + max), lowNum);
+      if (currMulitple % currDivisor === 0){
+        if (currDivisor === lowNum){return currMulitple;} else {
+          //check if num is divisible by num after that
+          return getMultiple(currMulitple, lowNum, (currDivisor - 1));
         }
+      } else { //if not, add original num to num and try again 
+        return getMultiple((currMulitple + max), lowNum);
+      }
     }
   } 
   return getMultiple(max, min);

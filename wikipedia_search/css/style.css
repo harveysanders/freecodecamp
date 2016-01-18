@@ -1,6 +1,11 @@
 body{
 	background-color: #F7F6F2;
 	color: #747533;
+
+}
+
+.font-overide {
+	font-family: 'Muli', sans-serif;
 }
 
 @keyframes grow-search-box {
@@ -15,23 +20,18 @@ body{
 
 .search-box {
 	/*margin: 0 auto;*/
-	outline: none;
-	border: solid 0.5em;
+	outline: none;	
 	border-radius: 2em;
-	width: 2.6em;
-	animation-name: grow-search-box;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
+	/*width: 2.6em;*/
+	-webkit-transition: width 2s ease;
+	-moz-transition: width 2s ease;
+	-o-transition: width 2s ease;
+	transition: width 2s ease;
 }
 
-.search-box-animated {
-	outline: none;
+.search-box-change {
 	border: solid 0.5em;
-	border-radius: 2em;
-	width: 2.6em;
-	animation-name: grow-search-box;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
+	width: 12.6em;
 }
 
 .search-result {
@@ -46,8 +46,8 @@ body{
 	color: #0194E0;
 }
 .search-icon{
-	position: absolute;
-	top:156px;
+	/*position: absolute;
+	top:156px;*/
 }
 a:hover{
 	text-decoration: none;
@@ -60,4 +60,13 @@ a:hover{
 	align-items: center;
 	margin: 0 auto;
 	position: relative;
+}
+
+.absolute-center {
+  width: 50%;
+  height: 50%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
 }

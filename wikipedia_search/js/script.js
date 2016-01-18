@@ -5,10 +5,15 @@
 	function queryWikipedia(query){
 		$.get('//en.wikipedia.org/w/api.php?action=query&list=search&callback=?&format=json&srprop=snippet%7Ctitlesnippet%7Credirecttitle&titles&srsearch=' + encodeURI(query), function(data){
 			console.log(data);
-			var searchResults = data.query.search.map(function(result){
-				return createJQueryElement(result);
-			});
-			appendElements(searchResults);
+			if (data.query.search.length > 0) {
+				var searchResults = data.query.search.map(function(result){
+					return createJQueryElement(result);
+				});
+				appendElements(searchResults);
+			} else {
+				$('.search-results').html('No results found. Please try another search term.');
+			}
+			
 
 		}, 'json'); //NEED to pass 'json' after callback OR use getJSON(). Look up why later.
 	}
@@ -29,7 +34,8 @@
 	}
 
 	function appendElements(elements){
-		$('.results-view').append(elements);
+		$('.search-results').html('');
+		$('.search-results').append(elements);
 	}
 
 	function spacesToUnderscores(string){
@@ -55,8 +61,11 @@
 	});
 
 	$('.search-icon').on('click', function(){
-		$('.search-box').addClass('.search-icon-animated');
+		$('.search-icon').hide();
+		// $('.search-box').show();
+		$('.search-box').toggleClass('search-box-change');
 	});
 
+	// $('.search-box').hide();
 	$('results-view').hide();
 })();
