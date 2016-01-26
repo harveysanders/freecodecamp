@@ -3,7 +3,7 @@
 	var $searchDiv = $('#search-div');
 
 	function queryWikipedia(query){
-		$.get('http://en.wikipedia.org/w/api.php?action=query&list=search&callback=?&format=json&srprop=snippet%7Ctitlesnippet%7Credirecttitle&titles&srsearch=' + encodeURI(query), function(data){
+		$.get('//en.wikipedia.org/w/api.php?action=query&list=search&callback=?&format=json&srprop=snippet%7Ctitlesnippet%7Credirecttitle&titles&srsearch=' + encodeURI(query), function(data){
 			console.log(data);
 			if (data.query.search.length > 0) {
 				var searchResults = data.query.search.map(function(result){
