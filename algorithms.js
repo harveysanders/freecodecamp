@@ -1,4 +1,81 @@
 //Advanced Algorithm
+function thirt(n) {
+    // your code
+    var multipliers = [1, 10, 9, 12, 3, 4];
+    var digits = n.toString().split('').map(function(char) {return parseInt(char);});
+    return digits.reduce(function(sum, num, index){
+        return sum + num * multipliers[index];
+      }, 0);
+}
+
+function friendly(dates) {
+  function monthToName(num) {
+    var monthLookup = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return monthLookup[num];
+  }
+
+  function numToOrdinal(num) {
+    var suffixes = ['th', 'st', 'nd', 'rd'];
+    if (num === 12) {
+      return '12th';
+    }else if (num === 13) {
+      return '13th';
+    }else {
+      var lastDigit = num % 10;
+      return (lastDigit > 0 && lastDigit < 4) ? num.toString() + suffixes[lastDigit] : num.toString() + suffixes[0];
+    }
+  }
+
+  function parseDate2(str){
+    var dateComps = str.split('-').map(function(component){
+      return parseInt(component);
+    });
+    return {
+      year: dateComps[0],
+      month: monthToName(dateComps[1]),
+      day: numToOrdinal(dateComps[2])
+    };
+  }
+
+  function parseDate(str) {
+    var dateComps = str.split('-').map(function(component) {
+      return parseInt(component);
+    });
+    return new Date(dateComps[0], dateComps[1]-1, dateComps[2]); 
+  }
+
+  var timeBetween = dates.map(parseDate)[1].getTime() - dates.map(parseDate)[0].getTime();
+
+  var parsedDates = dates.map(parseDate);
+  var formattedDates = parsedDates.map(function(dateObj) {
+    return {
+      month: monthToName(dateObj.getMonth()),
+      date: numToOrdinal(dateObj.getDate()),
+      year: dateObj.getFullYear()
+    };
+  });
+
+  if (timeBetween === 0) {
+    return [formattedDates[0].month + ' ' + formattedDates[0].date + ', ' + formattedDates[0].year]; 
+  }else if (formattedDates[0].month === formattedDates[1].month && timeBetween < 3.14496e10) {
+    return [
+      formattedDates[0].month + ' ' + formattedDates[0].date,
+      formattedDates[1].date
+    ];
+  }else if (timeBetween < 31449600000) {
+    return formattedDates.map(function(date) {
+      return date.month + ' ' + date.date;
+    });
+  }
+  else {
+    return formattedDates.map(function(date) {
+      return date.month + ' ' + date.date +', ' + date.year;
+    });
+  }
+}
+
+friendly(['2015-07-01', '2015-07-04']);
+
 
 function permAlone (str) {
   
@@ -110,6 +187,14 @@ function sym(args) {
     }));
   }, []);
 
+  //check if nums in array are unique
+  // check if each num is in the prev Arr.
+  // if not, return num
+  // if num is already in prev array, remove num from prev array
+  // then concatenate symetric difference array with curr array
+
+  // sym([1, 2, 3], [5, 2, 1, 4]) should return [3, 5, 4].
+  // sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]) should return [1, 4, 5].
  } 
 
 function cc(arrs) {
@@ -118,17 +203,6 @@ function cc(arrs) {
   return flat.concat(toAdd);
  }, []);
 }
-
-//check if nums in array are unique
-// check if each num is in the prev Arr.
-// if not, return num
-// if num is already in prev array, remove num from prev array
-// then concatenate symetric difference array with curr array
-
-// sym([1, 2, 3], [5, 2, 1, 4]) should return [3, 5, 4].
-// sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]) should return [1, 4, 5].
-
-
 
 function telephoneCheck(str) {
   // Good luck!
@@ -310,8 +384,6 @@ function smallestCommons(arr) {
   return getMultiple(max, min);
 }
   
-
-
 function sumPrimes(num) {
   var nums = [2];
   var primes;
@@ -380,25 +452,16 @@ function convertToHTMLEnt(str) {
 
   function charToEntity(char){
     var entity = '';
-    switch (char) {
-      case '&':
-        entity = '&amp;';
-        break;
-      case '<':
-        entity = '&lt;';
-        break;
-      case '>':
-        entity = '&gt;';
-        break;
-      case '"':
-        entity = '&quot;';
-        break;
-      case "'":
-        entity = '&apos;';
-        break;
-    }
-    return entity;
+    var lookup = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&apos;'
+    };
+    return lookup[char];
   }
+
   return result;
   
 }
@@ -453,7 +516,8 @@ function pair(str) {
  	var DNAbaseSingles = str.split('');
  	var result = DNAbaseSingles.map(function(base){
  		var basePair = [];
- 		switch(base) {
+
+  	switch(base) {
  			case 'A':
  				basePair.push('A', 'T');
  				break;
@@ -519,6 +583,7 @@ function translate(str) {
 function convert(num){
   function numeralToRoman(numeral){
     var romanNum = '';
+
     switch(numeral){
       case 1000:
         romanNum = 'M';
