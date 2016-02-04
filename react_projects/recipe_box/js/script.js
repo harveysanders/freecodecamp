@@ -13,19 +13,8 @@
 
 	var currRecipes = [];
 
-	if (typeof Storage !== "undefined") {
-
-		if (!localStorage.getItem('recipes')) {
-			currRecipes = defaultRECIPES;
-		} else {
-			currRecipes = getLocalData('recipes');
-		}
-	} else {
-		console.log("Sorry! No Web Storage support..");
-	}
-
-	function saveToLocalStorage(dataName, json) {
-		localStorage.setItem(dataName, JSON.stringify(json));
+	function saveToLocalStorage(dataName, obj) {
+		localStorage.setItem(dataName, JSON.stringify(obj));
 	}
 
 	function getLocalData(dataName) {
@@ -128,17 +117,18 @@
 			return { name: '', ingredients: '' };
 		},
 		handleInput: function handleInput(name, ingredients) {
+			console.log('handleInput on AddRecipeModal');
 			this.setState({
 				name: name,
 				ingredients: ingredients
 			});
 		},
 		handleAdd: function handleAdd() {
-			currRecipes.push({
+			console.log('handleAdd on AddRecipeModal');
+			this.props.onUserAdd({
 				name: this.state.name,
 				ingredients: this.state.ingredients.split(',')
 			});
-			console.log(currRecipes[currRecipes.length - 1]);
 		},
 		render: function render() {
 			return React.createElement(
@@ -239,6 +229,34 @@
 	var RecipeBox = React.createClass({
 		displayName: 'RecipeBox',
 
+		loadRecipesFromLocalStorage: function loadRecipesFromLocalStorage() {
+			if (typeof Storage !== "undefined") {
+
+				if (!localStorage.getItem('recipes')) {
+					this.setState({ recipes: defaultRECIPES });
+				} else {
+					this.setState({ recipes: getLocalData('recipes') });
+				}
+			} else {
+				console.log("Sorry! No Web Storage support..");
+			}
+		},
+		getInitialState: function getInitialState() {
+			return { recipes: [] };
+		},
+		componentDidMount: function componentDidMount() {
+			this.loadRecipesFromLocalStorage();
+		},
+		handleNewRecipe: function handleNewRecipe(recipe) {
+			console.log('handleNewRecipe on RecipeBox. recipe: ' + recipe.name);
+			var recipes = this.state.recipes;
+			recipe.id = recipe.name;
+			console.log('prev recipes: ', recipes);
+			var newRecipes = recipes.push(recipe);
+			console.log('new recipes: ', recipes);
+			this.setState({ recipes: recipes });
+			saveToLocalStorage('recipes', recipes);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
@@ -246,9 +264,9 @@
 				React.createElement(
 					'div',
 					{ className: 'col-md-12' },
-					React.createElement(RecipeList, { recipes: currRecipes }),
+					React.createElement(RecipeList, { recipes: this.state.recipes }),
 					React.createElement(AddRecipeBtn, null),
-					React.createElement(AddRecipeModal, null)
+					React.createElement(AddRecipeModal, { onUserAdd: this.handleNewRecipe })
 				)
 			);
 		}

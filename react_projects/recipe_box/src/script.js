@@ -13,21 +13,8 @@
 
 	var currRecipes = [];
 
-
-	if(typeof(Storage) !== "undefined") {
-
-			if (!localStorage.getItem('recipes')) { 
-				currRecipes = defaultRECIPES;
-			} else {
-				currRecipes = getLocalData('recipes');
-			}
-
-	} else {
-	    console.log ("Sorry! No Web Storage support..");
-	}
-
-	function saveToLocalStorage(dataName, json) {
-		localStorage.setItem(dataName, JSON.stringify(json));
+	function saveToLocalStorage(dataName, obj) {
+		localStorage.setItem(dataName, JSON.stringify(obj));
 	}
 
 	function getLocalData(dataName) {
@@ -106,17 +93,18 @@
 			return {name: '', ingredients: ''}
 		},
 		handleInput: function(name, ingredients) {
+			console.log('handleInput on AddRecipeModal');
 			this.setState({
 				name: name,
 				ingredients: ingredients
 			});
 		},
 		handleAdd: function() {
-			currRecipes.push({
+			console.log('handleAdd on AddRecipeModal');
+			this.props.onUserAdd({
 				name: this.state.name,
 				ingredients: this.state.ingredients.split(',')
 			});
-			console.log(currRecipes[currRecipes.length-1]);
 		},
 		render: function() {
 			return (
@@ -184,13 +172,42 @@
 	});
 
 	var RecipeBox = React.createClass({
+		loadRecipesFromLocalStorage: function() {
+			if(typeof(Storage) !== "undefined") {
+
+				if (!localStorage.getItem('recipes')) { 
+					this.setState({recipes: defaultRECIPES});
+				} else {
+					this.setState({recipes: getLocalData('recipes')});
+				}
+			} else {
+			    console.log ("Sorry! No Web Storage support..");
+			}
+		},
+		getInitialState: function() {
+			return {recipes: []};
+		},
+		componentDidMount: function() {
+			this.loadRecipesFromLocalStorage();
+		},
+		handleNewRecipe: function(recipe) {
+			console.log('handleNewRecipe on RecipeBox. recipe: ' + recipe.name);
+			var recipes = this.state.recipes;
+			recipe.id = recipe.name;
+			console.log('prev recipes: ', recipes);
+			var newRecipes = recipes.push(recipe);
+			console.log('new recipes: ', recipes);
+			this.setState({recipes: recipes});
+			saveToLocalStorage('recipes', recipes);
+
+		},
 		render: function() {
 			return (
 				<div className="row">
 					<div className="col-md-12">
-						<RecipeList recipes={currRecipes} />
+						<RecipeList recipes={this.state.recipes} />
 						<AddRecipeBtn />
-						<AddRecipeModal />
+						<AddRecipeModal onUserAdd={this.handleNewRecipe} />
 					</div>
 				</div>
 			);
