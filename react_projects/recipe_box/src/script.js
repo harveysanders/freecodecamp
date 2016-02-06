@@ -1,17 +1,10 @@
 (function() {
-		// ---------------Local Storge ----------------------
 
-		/*
-		check if recipes are in local storage
-			if not, load default recipes
-			else load recipes from local storage
+	// TODO: edit recipe functionality
+	// TODO: delete recipe function
+	// TODO: clear all locally stored recipes
 
-
-
-		*/
 	var defaultRECIPES = [{name: 'Pumpkin Pie', ingredients: ['Pumpkin Puree', 'Sweetened Condensed Milk', 'Eggs', 'Pumpkin Pie Spice', 'Pie Crust']}, {name: 'Breakfast Sandwich', ingredients: ['Seeduction Bread', 'Advocado', 'Egg', 'Smoked Gouda', 'Tony Chacherie\'s']}];
-
-	var currRecipes = [];
 
 	function saveToLocalStorage(dataName, obj) {
 		localStorage.setItem(dataName, JSON.stringify(obj));
@@ -23,13 +16,14 @@
 
 	//-------------------- React view -------------------
 
-	//-recipe list
-	// 	-recipe
-	// 		-ingredients
-	// 		-buttons
-	// 			-delete
-	// 			-edit
-	// -add recipe button
+	// -recipe box
+	// 	-recipe list
+	// 		-recipe
+	// 			-ingredients
+	// 			-buttons
+	// 				-delete
+	// 				-edit
+	// 	-add recipe button
 
 	var IngredientsList = React.createClass({
 		render: function() {
@@ -47,18 +41,53 @@
 		}
 	});
 
-	var Recipe = React.createClass({
+	var DeleteRecipeBtn = React.createClass({
+		handleDeleteClick: function(e) {
+			console.log('click: delete' + e);
+			this.props.onClick();
+		},
 		render: function() {
-			var collapseID = 'collapse' + this.props.recipe.name.replace(/\s+/g, '');
-			var headingName = this.props.recipe.name.replace(/\s+/g, '') + 'Heading';
+			return (
+				<button className="btn btn-default" onClick={this.handleDeleteClick} >
+					Delete Recipe
+				</button>
+			);
+		}
+	});
+
+	var EditRecipeBtn = React.createClass({
+		render: function() {
+			return (
+				<a href={this.props.modalHref} className="btn btn-default" data-toggle="modal">
+					Edit Recipe
+				</a>
+			);
+		}
+	});
+
+	var Recipe = React.createClass({
+		handleDeleteClick: function(e) {
+			console.log('running delete on Recipe');
+			this.props.onRecipeDelete(this.props.recipe);
+		},
+		render: function() {
+			var elementId = this.props.recipe.name.replace(/\s+/g, '')
+			var collapseID = 'collapse' + elementId;
+			var headingName = elementId + 'Heading';
+
 			return (
 				<div className="panel panel-default">
 					<div className="panel-heading">
-		        <a className="panel-title" data-toggle="collapse" data-parent="#accordion" href={"#" + collapseID} aria-expanded="false" aria-controls={collapseID} >
-		          {this.props.recipe.name}
-		        </a>
+				        <a className="panel-title" data-toggle="collapse" data-parent="#accordion" href={"#" + collapseID} aria-expanded="false" aria-controls={collapseID} >
+				          {this.props.recipe.name}
+				        </a>
 					</div>
 					<IngredientsList labelledBy={headingName} collapseID={collapseID} ingredients={this.props.recipe.ingredients} />
+					<div className="recipe-ui-btns">
+						<DeleteRecipeBtn onClick={this.handleDeleteClick} />
+						<EditRecipeBtn onClick={this.handleEditClick} modalHref={"#" + elementId + "EditRecipeModal"} />
+					</div>
+					<AddEditRecipeModal id={elementId + "EditRecipeModal"}/>
 				</div>
 			);
 		}
@@ -66,13 +95,14 @@
 
 	var RecipeList = React.createClass({
 		render: function() {
-			var recipes = this.props.recipes.map(function(recipe) {
-				return <Recipe recipe={recipe} key={recipe.name} />;
+			var handleDeleteRecipe = this.props.onRecipeDelete;
+			var Recipes = this.props.recipes.map(function(recipe) {
+				return <Recipe recipe={recipe} key={recipe.name} onRecipeDelete={handleDeleteRecipe} />;
 			});
 
 			return (
 				<div className="panel-group" id="accordion" aria-multiselectable="true">
-					{recipes}
+					{Recipes}
 				</div>
 			);
 		}
@@ -88,27 +118,26 @@
 		}
 	});
 
-	var AddRecipeModal = React.createClass({
+	var AddEditRecipeModal = React.createClass({
 		getInitialState: function() {
 			return {name: '', ingredients: ''}
 		},
 		handleInput: function(name, ingredients) {
-			console.log('handleInput on AddRecipeModal');
 			this.setState({
 				name: name,
 				ingredients: ingredients
 			});
 		},
-		handleAdd: function() {
-			console.log('handleAdd on AddRecipeModal');
-			this.props.onUserAdd({
+		handleAddClick: function() {
+			this.props.onRecipeAdd({
 				name: this.state.name,
 				ingredients: this.state.ingredients.split(',')
 			});
+			$('#AddRecipeModal').modal('hide');
 		},
 		render: function() {
 			return (
-				<div id="AddRecipeModal" className="modal fade ">
+				<div id={this.props.id} className="modal fade ">
       
 			    <div className="modal-dialog modal-lg">
 			        <div className="modal-content">
@@ -123,7 +152,7 @@
 						    </div>
 					 
 						    <div className="modal-footer"> 
-						      <button type="button" className="btn btn-primary" onClick={this.handleAdd} >Add Recipe</button>
+						      <button type="button" className="btn btn-primary" onClick={this.handleAddClick} >Add Recipe</button>
 						      <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
 						    </div>
 							
@@ -190,24 +219,38 @@
 		componentDidMount: function() {
 			this.loadRecipesFromLocalStorage();
 		},
-		handleNewRecipe: function(recipe) {
-			console.log('handleNewRecipe on RecipeBox. recipe: ' + recipe.name);
+		handleNewRecipeSubmit: function(recipe) {
 			var recipes = this.state.recipes;
-			recipe.id = recipe.name;
-			console.log('prev recipes: ', recipes);
-			var newRecipes = recipes.push(recipe);
-			console.log('new recipes: ', recipes);
-			this.setState({recipes: recipes});
-			saveToLocalStorage('recipes', recipes);
+			recipe.id = recipe.name; //need to add unique id to every element in state
+			var newRecipes = recipes.concat([recipe]);
+			this.setState({recipes: newRecipes});
+			saveToLocalStorage('recipes', newRecipes);
 
+		},
+		handleEditRecipe: function(recipeToEdit) {
+			var recipes = this.state.recipes;
+			var selectedRecipe = recipes.filter(function(recipe) {
+				return recipeToEdit.name === recipe.name;
+			})[0];
+
+		},
+		handleDeleteRecipe: function(recipeToDel) {
+			var recipes = this.state.recipes;
+			var filteredRecipes = recipes.filter(function(recipe) {
+				return recipeToDel.name !== recipe.name;
+			});
+			this.setState({recipes: filteredRecipes});
+			saveToLocalStorage('recipes', filteredRecipes);
 		},
 		render: function() {
 			return (
 				<div className="row">
 					<div className="col-md-12">
-						<RecipeList recipes={this.state.recipes} />
+						<RecipeList 
+							recipes={this.state.recipes} 
+							onRecipeDelete={this.handleDeleteRecipe} />
 						<AddRecipeBtn />
-						<AddRecipeModal onUserAdd={this.handleNewRecipe} />
+						<AddEditRecipeModal onRecipeAdd={this.handleNewRecipeSubmit} id="AddRecipeModal" />
 					</div>
 				</div>
 			);
