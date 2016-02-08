@@ -1,7 +1,6 @@
 (function() {
 
-	// TODO: edit recipe functionality
-	// TODO: delete recipe function
+	// TODO: add 'sure?' modal upon recipe delete attempt
 	// TODO: clear all locally stored recipes
 
 	var defaultRECIPES = [{name: 'Pumpkin Pie', ingredients: ['Pumpkin Puree', 'Sweetened Condensed Milk', 'Eggs', 'Pumpkin Pie Spice', 'Pie Crust']}, {name: 'Breakfast Sandwich', ingredients: ['Seeduction Bread', 'Advocado', 'Egg', 'Smoked Gouda', 'Tony Chacherie\'s']}];
@@ -70,6 +69,7 @@
 			console.log('running delete on Recipe');
 			this.props.onRecipeDelete(this.props.recipe);
 		},
+
 		render: function() {
 			var elementId = this.props.recipe.name.replace(/\s+/g, '')
 			var collapseID = 'collapse' + elementId;
@@ -87,7 +87,10 @@
 						<DeleteRecipeBtn onClick={this.handleDeleteClick} />
 						<EditRecipeBtn onClick={this.handleEditClick} modalHref={"#" + elementId + "EditRecipeModal"} />
 					</div>
-					<AddEditRecipeModal id={elementId + "EditRecipeModal"}/>
+					<AddEditRecipeModal 
+						id={elementId + "EditRecipeModal"} 
+						recipe={this.props.recipe}
+						onRecipeSave={this.props.onRecipeEdit} />
 				</div>
 			);
 		}
@@ -95,9 +98,14 @@
 
 	var RecipeList = React.createClass({
 		render: function() {
-			var handleDeleteRecipe = this.props.onRecipeDelete;
+			var handleDeleteRecipe = this.props.onRecipeDelete; //why?
+			var handleEditRecipe = this.props.onRecipeEdit; //why?
 			var Recipes = this.props.recipes.map(function(recipe) {
-				return <Recipe recipe={recipe} key={recipe.name} onRecipeDelete={handleDeleteRecipe} />;
+				return <Recipe 
+					recipe={recipe} 
+					key={recipe.name} 
+					onRecipeDelete={handleDeleteRecipe} 
+					onRecipeEdit={handleEditRecipe} />;
 			});
 
 			return (
@@ -122,18 +130,27 @@
 		getInitialState: function() {
 			return {name: '', ingredients: ''}
 		},
+		componentDidMount: function() {
+			var name = this.props.recipe.name || '';
+			var ingredients = this.props.recipe.ingredients.toString() || '';
+			this.setState({
+				name: name,
+				ingredients: ingredients
+			});
+		},
 		handleInput: function(name, ingredients) {
 			this.setState({
 				name: name,
 				ingredients: ingredients
 			});
 		},
-		handleAddClick: function() {
-			this.props.onRecipeAdd({
+		handleSaveClick: function() {
+			console.log('save btn click');
+			this.props.onRecipeSave({
 				name: this.state.name,
 				ingredients: this.state.ingredients.split(',')
 			});
-			$('#AddRecipeModal').modal('hide');
+			$('#' + this.props.id).modal('hide');
 		},
 		render: function() {
 			return (
@@ -152,7 +169,7 @@
 						    </div>
 					 
 						    <div className="modal-footer"> 
-						      <button type="button" className="btn btn-primary" onClick={this.handleAddClick} >Add Recipe</button>
+						      <button type="button" className="btn btn-primary" onClick={this.handleSaveClick} >Save Recipe</button>
 						      <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
 						    </div>
 							
@@ -227,12 +244,14 @@
 			saveToLocalStorage('recipes', newRecipes);
 
 		},
-		handleEditRecipe: function(recipeToEdit) {
+		handleEditRecipe: function(editedRecipe) {
 			var recipes = this.state.recipes;
 			var selectedRecipe = recipes.filter(function(recipe) {
-				return recipeToEdit.name === recipe.name;
+				return editedRecipe.name === recipe.name;
 			})[0];
-
+			recipes.splice(recipes.indexOf(selectedRecipe), 1, editedRecipe);
+			this.setState({recipes: recipes});
+			saveToLocalStorage('recipes', recipes);
 		},
 		handleDeleteRecipe: function(recipeToDel) {
 			var recipes = this.state.recipes;
@@ -248,9 +267,10 @@
 					<div className="col-md-12">
 						<RecipeList 
 							recipes={this.state.recipes} 
-							onRecipeDelete={this.handleDeleteRecipe} />
+							onRecipeDelete={this.handleDeleteRecipe} 
+							onRecipeEdit={this.handleEditRecipe}/>
 						<AddRecipeBtn />
-						<AddEditRecipeModal onRecipeAdd={this.handleNewRecipeSubmit} id="AddRecipeModal" />
+						<AddEditRecipeModal onRecipeSave={this.handleNewRecipeSubmit} id="AddRecipeModal" recipe={{name: '', ingredients: []}} />
 					</div>
 				</div>
 			);
@@ -261,6 +281,5 @@
 		<RecipeBox />,
 		document.getElementById('react-app')
 	);
-
 
 })();
