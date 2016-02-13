@@ -78,7 +78,36 @@ friendly(['2015-07-01', '2015-07-04']);
 
 
 function permAlone (str) {
+  function permutator(inputArr) {
+    var results = [];
+    
+    function permute(arr, memo) {
+      var cur, memo = memo || [];
+
+      for (var i=0; i<arr.length; i++) {
+        cur = arr.splice(i, 1);
+        if (arr.length === 0) {
+          results.push(memo.concat(cur));
+        }
+        permute(arr.slice(), memo.concat(cur));
+        arr.splice(i, 0, cur[0]);
+      }
+      return results;
+    }
+    return permute(inputArr);
+  }
   
+  function hasNoRepeats(array) {
+    var repeatAmt = 0;
+    array.forEach(function(element, index, array) {
+      if (element === array[index + 1]) repeatAmt++;
+    });
+    return repeatAmt > 0 ? false : true;
+  }
+
+  var permutations = permutator(str.split(''));
+
+  return permutations.filter(hasNoRepeats).length;
 }
 
 function inventory(curInv, newInv) {
