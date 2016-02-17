@@ -44,8 +44,15 @@
 				maxWidth: gridWidth,
 			};
 
-			for (var i = 0; i < Math.pow(gridSize, 2); i++) {
-				Cells.push(<Cell key={i} cellSize={gridWidth / gridSize} />);
+			for (var y = 0; y < gridSize; y++) {
+				Cells.push([]);
+				for (var x = 0; x < gridSize; x++) {
+					Cells[y][x] = <Cell 
+						key={x +', ' + y} 
+						cellSize={gridWidth / gridSize} 
+						xCoor={x}
+						yCoor={y}/>;
+				}
 			}
 			return (
 				<div id="game-grid" style={gridStyle} >
