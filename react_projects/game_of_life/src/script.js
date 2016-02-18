@@ -1,4 +1,8 @@
-(function() {
+(function(window) {
+
+	window.gameOfLife = window.gameOfLife || {};
+
+	var cellLifeChecker = window.gameOfLife.cellLifeChecker;
 
 	// Any live cell with < 2 live neighbours dies, as if caused by under-population.
 	// Any live cell with 2 || 3 live neighbours lives on to the next generation.
@@ -7,13 +11,12 @@
 
 	var Cell = React.createClass({
 		getInitialState: function() {
-			return {isAlive: false};
+			return {isAlive: this.props.initialLiveState};
 		},
 		handleClick: function(e) {
 			console.log('cell #' + this.props.num +  'was clicked.');
-			this.setState({isAlive: true});
+			this.setState({isAlive: !this.state.isAlive});
 		},
-		position: null,
 		render: function() {
 			var aliveColor = '#059BF3';
 			var deadColor = '#FFF'
@@ -36,8 +39,8 @@
 	var GameGrid = React.createClass({
 		render: function() {
 			var Cells = [];
-			var gridWidth = 600;
-			var gridSize = 30;
+			var gridWidth = 600; //pixels
+			var gridSize = 10; //amount of cells per axis
 
 			var gridStyle = {
 				minWidth: gridWidth,
@@ -48,12 +51,20 @@
 				Cells.push([]);
 				for (var x = 0; x < gridSize; x++) {
 					Cells[y][x] = <Cell 
-						key={x +', ' + y} 
-						cellSize={gridWidth / gridSize} 
-						xCoor={x}
-						yCoor={y}/>;
+									key={x +', ' + y} 
+									cellSize={gridWidth / gridSize} 
+									xCoor={x}
+									yCoor={y}
+									initialLiveState={false}
+									/>;
 				}
 			}
+
+			setTimeout(function() {
+				console.log(window.gameOfLife);
+				cellLifeChecker(Cells);
+			}, 10000);
+
 			return (
 				<div id="game-grid" style={gridStyle} >
 					{Cells}
@@ -77,4 +88,4 @@
 		document.getElementById('react-app')
 	);
 
-})();
+})(window);
