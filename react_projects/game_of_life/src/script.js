@@ -10,9 +10,16 @@
 	// Any dead cell with === 3 live neighbours becomes a live cell, as if by reproduction.
 
 	let Cell = React.createClass({
-		handleClick: function(e) {
-			this.props.onCellClick(this.props.isAlive);
-			console.log('cell (' + this.props.xCoor + ', ' + this.props.yCoor + ') was clicked.');
+		handleClick: function() {
+			// console.log('cell (' + this.props.xCoor + ', ' + this.props.yCoor + ') was clicked.');
+			this.props.onClick(
+				this.props.xCoor,
+				this.props.yCoor,
+				this.props.isAlive
+			);		
+		},
+		shouldComponentUpdate: function(nextProps, nextState) {
+			return this.props.isAlive !== nextProps.isAlive;
 		},
 		render: function() {
 			const aliveColor = '#059BF3';
@@ -35,43 +42,50 @@
 
 	let GameGrid = React.createClass({
 		getInitialState: function() {
-			return {isAlive: false};
-		},
-		updateCellState: function(isAlive) {
-			this.setState({isAlive: !isAlive});
-		},
-		render: function() {
-			let Cells = [];
-			let gridWidth = 600; //pixels
-			let gridSize = 10; //amount of cells per axis
+			let cells = [];
 
-			let gridStyle = {
-				minWidth: gridWidth,
-				maxWidth: gridWidth,
-			};
-
-			for (let y = 0; y < gridSize; y++) {
-				Cells.push([]);
-				for (let x = 0; x < gridSize; x++) {
-					Cells[y][x] = <Cell 
-									key={x +', ' + y} 
-									cellSize={gridWidth / gridSize} 
-									xCoor={x}
-									yCoor={y}
-									initialLiveState={false}
-									isAlive={this.state.isAlive}
-									onCellClick={this.updateCellState}
-									/>;
+			for (let y = 0; y < this.props.gridSize; y++) {
+				cells.push([]);
+				for (let x = 0; x < this.props.gridSize; x++) {
+					cells[y][x] = {
+							cellSize: this.props.gridWidth / this.props.gridSize, 
+							xCoor: x,
+							yCoor: y,
+							isAlive: false
+						};
 				}
 			}
+			return {cells: cells};
+		},
+		updateCellState: function(x, y, isAlive) {
+			let cells = this.state.cells;
+			cells[y][x].isAlive = !isAlive;
+			this.setState({cells: cells});
+		},
+
+		render: function() {
+			var Cells = this.state.cells.map(function(row) {
+				return row.map(function(cell) {
+					var boundUpdate = this.updateCellState;
+					return (
+						<Cell
+							key={cell.xCoor + ', ' + cell.yCoor} 
+							cellSize={cell.cellSize} 
+							xCoor={cell.xCoor}
+							yCoor={cell.yCoor}
+							isAlive={cell.isAlive}
+							onClick={boundUpdate}
+						/>
+					);	
+				}, this);	
+			}, this);
 
 			setTimeout(function() {
-				console.log(window.gameOfLife);
-				cellLifeChecker(Cells);
+				//cellLifeChecker(this.state.cells);
 			}, 10000);
 
 			return (
-				<div id="game-grid" style={gridStyle} >
+				<div id="game-grid" style={this.props.gridStyle} >
 					{Cells}
 				</div>
 			);
@@ -80,9 +94,21 @@
 
 	let GameBoard = React.createClass({
 		render: function() {
+			let gridWidth = 600; //pixels
+			let gridSize = 20; //amount of cells per axis
+
+			let gridStyle = {
+				minWidth: gridWidth,
+				maxWidth: gridWidth,
+			};
+
 			return (
 				<div>
-					<GameGrid />
+					<GameGrid 
+						gridSize={gridSize}
+						gridWidth={gridWidth}
+						gridStyle={gridStyle}
+					/>
 				</div>
 			);
 		}
