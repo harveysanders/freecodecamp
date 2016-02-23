@@ -4,10 +4,6 @@
 
 	let cellLifeChecker = window.gameOfLife.cellLifeChecker;
 
-	// Any live cell with < 2 live neighbours dies, as if caused by under-population.
-	// Any live cell with 2 || 3 live neighbours lives on to the next generation.
-	// Any live cell with > 3 live neighbours dies, as if by over-population.
-	// Any dead cell with === 3 live neighbours becomes a live cell, as if by reproduction.
 
 	let Cell = React.createClass({
 		handleClick: function() {
@@ -62,8 +58,18 @@
 			cells[y][x].isAlive = !isAlive;
 			this.setState({cells: cells});
 		},
+		componentDidMount: function() {
+			var gridContext = this; // stop this in timer from pointing to global context
+			setInterval(function() {
+				var updatedCells = cellLifeChecker(gridContext.state.cells, gridContext.props.gridSize);
+				gridContext.setState({
+					cells: updatedCells
+				});
+			}, gridContext.props.refreshTime);
+		},
 
 		render: function() {
+			console.log('Game grid render called');
 			var Cells = this.state.cells.map(function(row) {
 				return row.map(function(cell) {
 					var boundUpdate = this.updateCellState;
@@ -80,13 +86,6 @@
 				}, this);	
 			}, this);
 
-			var gridContext = this; // stop this in timer from pointing to global context
-
-			setTimeout(function() {
-				console.log(gridContext);
-				cellLifeChecker(gridContext.state.cells, gridContext.props.gridSize);
-			}, gridContext.props.refreshTime);
-
 			return (
 				<div id="game-grid" style={this.props.gridStyle} >
 					{Cells}
@@ -99,7 +98,7 @@
 		render: function() {
 			let refreshTime = 10000;
 			let gridWidth = 600; //pixels
-			let gridSize = 4; //amount of cells per axis
+			let gridSize = 6; //amount of cells per axis
 			let gridStyle = {
 				minWidth: gridWidth,
 				maxWidth: gridWidth,
