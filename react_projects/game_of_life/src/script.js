@@ -80,9 +80,12 @@
 				}, this);	
 			}, this);
 
+			var gridContext = this; // stop this in timer from pointing to global context
+
 			setTimeout(function() {
-				//cellLifeChecker(this.state.cells);
-			}, 10000);
+				console.log(gridContext);
+				cellLifeChecker(gridContext.state.cells, gridContext.props.gridSize);
+			}, gridContext.props.refreshTime);
 
 			return (
 				<div id="game-grid" style={this.props.gridStyle} >
@@ -94,9 +97,9 @@
 
 	let GameBoard = React.createClass({
 		render: function() {
+			let refreshTime = 10000;
 			let gridWidth = 600; //pixels
-			let gridSize = 20; //amount of cells per axis
-
+			let gridSize = 4; //amount of cells per axis
 			let gridStyle = {
 				minWidth: gridWidth,
 				maxWidth: gridWidth,
@@ -105,6 +108,7 @@
 			return (
 				<div>
 					<GameGrid 
+						refreshTime={refreshTime}
 						gridSize={gridSize}
 						gridWidth={gridWidth}
 						gridStyle={gridStyle}
