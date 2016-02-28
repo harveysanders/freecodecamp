@@ -13,6 +13,9 @@
 		//state is one cell
 		switch (action.type) {
 			case 'TOGGLE_CELL':
+				if (state.xCoor !== action.x || state.yCoor !== action.y) {
+					return state
+				}
 				return Object.assign({}, state, {
 					isAlive: !state.isAlive
 				});
@@ -161,10 +164,10 @@
 					<Cell
 						key={cell.xCoor + ', ' + cell.yCoor}
 						cellSize={cell.cellSize} 
-						xCoor={cell.xCoor}
-						yCoor={cell.yCoor}
+						x={cell.xCoor}
+						y={cell.yCoor}
 						isAlive={cell.isAlive}
-						onClick={() => onCellClick(cell.x, cell.y)}
+						onClick={() => onCellClick(cell.xCoor, cell.yCoor)}
 					/>
 				)
 			)
@@ -172,70 +175,6 @@
 		</div>
 	);
 
-	class TodoApp extends Component {
-		render() {
-			//dont have to type 'this.props' everytime
-			const {
-				todos,
-				visibilityFilter
-			} = this.props;
-
-			const visibileTodos = getVisibileTodos(
-				todos, //(this.props.todos)
-				visibilityFilter //(this.props.visibilityFilter)
-			);
-			return (
-				<div>
-					<input ref={node => {
-						this.input = node;
-					}} />
-					<button onClick={() => {
-						store.dispatch({
-							type: 'ADD_TODO',
-							text: this.input.value,
-							id: nextTodoId++
-						});
-						this.input.value = '';
-					}}>
-						Add Todo
-					</button>
-					<TodoList
-						todos={visibileTodos}
-						onTodoClick={id =>
-							store.dispatch({
-								type: 'TOGGLE_TODO',
-								id : id
-							})
-						}
-					/>
-					<p>
-						Show:
-						{' '}
-						<FilterLink
-							filter='SHOW_ALL'
-							currentFilter={visibilityFilter}
-						>
-							All
-						</FilterLink>
-						{' '}
-						<FilterLink
-							filter='SHOW_ACTIVE'
-							currentFilter={visibilityFilter}
-						>
-							Active
-						</FilterLink>
-						{' '}
-						<FilterLink
-							filter='SHOW_COMPLETED'
-							currentFilter={visibilityFilter}
-						>
-							Completed
-						</FilterLink>
-					</p>
-				</div>
-			);
-		}
-	}
 
 	class Game extends Component {
 		render() {
@@ -243,6 +182,7 @@
 				<GameGrid 
 					cells={this.props.cells}
 					onCellClick={(x,y) => {
+						console.log('cell (' + x + ', ' + y + ') clicked');
 						store.dispatch({
 							type: 'TOGGLE_CELL',
 							x: x,
