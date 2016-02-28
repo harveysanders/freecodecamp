@@ -6,10 +6,8 @@
 		gridSize: 6,
 		gridWidth: 600,
 		refreshTime: 10000,
-		cells: []
-	};
-
-	var initialCells = [[{"cellSize":120,"xCoor":0,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":0,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":1,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":2,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":3,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":4,"isAlive":false}]];
+		cells: [[{"cellSize":120,"xCoor":0,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":0,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":1,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":2,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":3,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":4,"isAlive":false}]]
+	};	
 
 	const cell = (state, action) => {
 		//state is one cell
@@ -23,7 +21,7 @@
 		};
 	};
 
-	const cells = (state = initialCells, action) => {
+	const cells = (state = initialState.cells, action) => {
 		//state should be cells 
 
 		// countLiveNeighbors passed tests
@@ -114,6 +112,16 @@
 		}
 	};
 
+	const { combineReducers } = Redux;
+
+	const gameOfLife = combineReducers({
+		//key corresponds to state object it mananges
+		//values correspond to reducer functions that update the state
+		cells: cells
+		//since key/value match, ES6 obj literal shorthand allows omitting values
+	});
+
+
 	//tests
 	//8 live cells surround center dead cell (2,2)
 	var stateBefore = [[{"cellSize":120,"xCoor":0,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":0,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":0,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":1,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":1,"isAlive":true},{"cellSize":120,"xCoor":2,"yCoor":1,"isAlive":true},{"cellSize":120,"xCoor":3,"yCoor":1,"isAlive":true},{"cellSize":120,"xCoor":4,"yCoor":1,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":2,"isAlive":true},{"cellSize":120,"xCoor":2,"yCoor":2,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":2,"isAlive":true},{"cellSize":120,"xCoor":4,"yCoor":2,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":3,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":3,"isAlive":true},{"cellSize":120,"xCoor":2,"yCoor":3,"isAlive":true},{"cellSize":120,"xCoor":3,"yCoor":3,"isAlive":true},{"cellSize":120,"xCoor":4,"yCoor":3,"isAlive":false}],[{"cellSize":120,"xCoor":0,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":1,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":2,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":3,"yCoor":4,"isAlive":false},{"cellSize":120,"xCoor":4,"yCoor":4,"isAlive":false}]];
@@ -127,7 +135,7 @@
 
 	//Redux store
 	const { createStore } = Redux;
-	const store = createStore(cells);
+	const store = createStore(gameOfLife);
 
 	//Componets
 	const { Component } = React;
@@ -148,16 +156,19 @@
 
 	const GameGrid = ({cells, onCellClick, gridStyle}) => (
 		<div id="game-grid" style={gridStyle}>
-			{cells.map(cell =>
-				<Cell
-					key={cell.xCoor + ', ' + cell.yCoor}
-					cellSize={cell.cellSize} 
-					xCoor={cell.xCoor}
-					yCoor={cell.yCoor}
-					isAlive={cell.isAlive}
-					onClick={() => onCellClick(cell.x, cell.y)}
-				/>
-			)}
+			{cells.map(rows =>
+				rows.map(cell => (
+					<Cell
+						key={cell.xCoor + ', ' + cell.yCoor}
+						cellSize={cell.cellSize} 
+						xCoor={cell.xCoor}
+						yCoor={cell.yCoor}
+						isAlive={cell.isAlive}
+						onClick={() => onCellClick(cell.x, cell.y)}
+					/>
+				)
+			)
+		)}
 		</div>
 	);
 
