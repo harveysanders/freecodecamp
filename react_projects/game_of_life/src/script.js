@@ -5,6 +5,52 @@
 	let cellLifeChecker = window.gameOfLife.cellLifeChecker;
 
 
+	let GenerationCount = React.createClass({
+		render: function() {
+			return (
+				<div>
+					Generations: {this.props.generationCount}
+				</div>
+			);
+		}
+	});
+
+	let UI = React.createClass({
+
+		render: function() {
+			return (
+				<div>
+					cells per side:
+					<input type="text" onChange={this.props.onCellNumInput}/>
+
+
+					<PlayControls onClick={this.props.startGame}/>
+				</div>
+			);
+		}
+	});
+
+	let PlayControls = React.createClass({
+		handlePlayClick: function(e) {
+			console.log('play click');
+		},
+		handlePauseClick: function() {
+			console.log('pause click');
+		},
+		handleResetClick: function() {
+			console.log('reset click');
+		},
+		render: function() {
+			return (
+				<div className="btn-group" role="group" aria-label="play-controls">
+					<button onClick={this.handlePlayClick} type="button" className="btn btn-secondary">Play</button>
+					<button onClick={this.handlePauseClick} type="button" className="btn btn-secondary">Pause</button>
+					<button onClick={this.handleResetClick} type="button" className="btn btn-secondary">Reset</button>
+				</div>
+			);
+		}
+	});
+
 	let Cell = React.createClass({
 		handleClick: function() {
 			// console.log('cell (' + this.props.xCoor + ', ' + this.props.yCoor + ') was clicked.');
@@ -31,6 +77,8 @@
 					onClick={this.handleClick}
 					className="cell"
 					style={cellStyle} >
+					x: {this.props.xCoor}, 
+					y: {this.props.yCoor}
 				</div>
 			);
 		}
@@ -44,11 +92,11 @@
 				cells.push([]);
 				for (let x = 0; x < this.props.gridSize; x++) {
 					cells[y][x] = {
-							cellSize: this.props.gridWidth / this.props.gridSize, 
-							xCoor: x,
-							yCoor: y,
-							isAlive: false
-						};
+						cellSize: this.props.gridWidth / this.props.gridSize, 
+						xCoor: x,
+						yCoor: y,
+						isAlive: false
+					};
 				}
 			}
 			return {cells: cells};
@@ -95,10 +143,13 @@
 	});
 
 	let GameBoard = React.createClass({
+		handleCellNumInput: function(num) {
+			console.log(num);
+		},
 		render: function() {
-			let refreshTime = 10000;
+			let refreshTime = 200000;
 			let gridWidth = 600; //pixels
-			let gridSize = 6; //amount of cells per axis
+			let gridSize = 5; //amount of cells per axis
 			let gridStyle = {
 				minWidth: gridWidth,
 				maxWidth: gridWidth,
@@ -112,6 +163,8 @@
 						gridWidth={gridWidth}
 						gridStyle={gridStyle}
 					/>
+					<GenerationCount generationCount={20} />
+					<UI onCellNumInput={this.handleCellNumInput}/>
 				</div>
 			);
 		}
