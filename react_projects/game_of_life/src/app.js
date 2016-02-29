@@ -49,7 +49,7 @@
 		//state should be cells 
 
 		//firgure out how to get these values in
-		let gridSize = 6;
+		let gridSize = 20;
 		let gridWidth = 600;
 
 		// countLiveNeighbors passed tests
@@ -191,6 +191,30 @@
 	const { createStore } = Redux;
 	const store = createStore(gameOfLife);
 
+	//Keyboard listener
+	document.onkeydown = function(event) {
+		if (!event)
+			event = window.event;
+		let code = event.keyCode;
+		if (event.charCode && code === 0)
+			code = event.charCode;
+		switch(code) {
+		case 37:
+			//left arrow key
+			console.log('left key');
+			break;
+		case 39:
+			//right arrow key
+			console.log('right key');
+			store.dispatch({
+				type: 'INCREMENT_GENERATION'
+			});
+			logDispatch('INCREMENT_GENERATION');
+			break;
+		}
+		event.preventDefault();
+	};
+
 	//Componets
 	const { Component } = React;
 
@@ -203,8 +227,7 @@
 				width: cellSize,
 				height: cellSize
 			}} >
-			x: {x}, 
-			y: {y}
+			({x}, {y})
 		</div>
 	);
 
@@ -264,13 +287,13 @@
 	class Game extends Component {
 		componentDidMount() {
 			// where does this go???
-			setInterval(() => {
-				console.log('calculating next generation..');
-				store.dispatch({
-					type: 'INCREMENT_GENERATION'
-				});
-				logDispatch('INCREMENT_GENERATION');
-			}, 10000); //get time from state
+			// setInterval(() => {
+			// 	console.log('calculating next generation..');
+			// 	store.dispatch({
+			// 		type: 'INCREMENT_GENERATION'
+			// 	});
+			// 	logDispatch('INCREMENT_GENERATION');
+			// }, 10000); //get time from state
 		}
 
 		render() {
