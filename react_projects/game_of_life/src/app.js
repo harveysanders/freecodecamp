@@ -1,6 +1,26 @@
 (function(window) {
 	window.gameOfLife = window.gameOfLife || {};
 
+	//TODO1:
+	// figure out state tree to use size, width in grid creation
+	
+	// TODO2:
+	// get Play/Pause Button to work
+
+	// TODO3:
+	// get generationCount to work
+
+	// TODO4: 
+	// get size input box to work
+	
+	//logger helper
+	const logDispatch = (action) => {
+		console.log('Dispatching ' + action);
+		console.log('state: ');
+		console.log(store.getState());
+		console.log('----------------------');
+	};
+
 	//Reducers
 	var initialState = {
 		isPlaying: true,
@@ -105,21 +125,21 @@
 					if (cell.isAlive) {
 						if (liveNeighborCount < 2) {
 							newCell.isAlive = false;
-							console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') dies');
+							// console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') dies');
 							return newCell;
 
 						}else if (liveNeighborCount === 2 || liveNeighborCount === 3) {
-							console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') lives still');
+							// console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') lives still');
 							return newCell;
 
 						}else if (liveNeighborCount > 3) {
-							console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') dies');
+							// console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') dies');
 							newCell.isAlive = false;
 							return newCell;
 
 						}
 					} else if (!cell.isAlive && liveNeighborCount === 3) {
-						console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') is born!');
+						// console.log('neighbors: ' + liveNeighborCount + '. cell (' + x + ', ' + y + ') is born!');
 						newCell.isAlive = true;
 						return newCell;
 					} else {
@@ -165,7 +185,7 @@
 	// 	cells(stateBefore, 'INCREMENT_GENERATION')
 	// ).toEqual(stateAfter);
 
-	console.log('All tests pass.');
+	// console.log('All tests pass.');
 
 	//Redux store
 	const { createStore } = Redux;
@@ -198,7 +218,6 @@
 
 	const GameGrid = ({cells, onCellClick, gridStyle}) => (
 		<div id='game-grid' style={gridStyle}>
-			{console.log(cells)}
 			{cells.map(rows =>
 				rows.map(cell => (
 					<Cell
@@ -216,16 +235,17 @@
 	);
 
 	const UI = ({generationCount, onInput}) => (
-		<div>
+		<div id='game-ui' >
 			Generations: {generationCount}
 			cells per side:
-			<input type="text" onChange={onInput}/>
+			<input type="text" onChange={onInput} width='50%'/>
 			<PlayControls 
 				onPlayClick={
 					() => {
 						store.dispatch({
 							type: 'TOGGLE_PLAY'
 						});
+						logDispatch('TOGGLE_PLAY');
 					}
 				}
 				onResetClick={
@@ -233,6 +253,7 @@
 						store.dispatch({
 							type: 'RESET_GAME'
 						});
+						logDispatch('RESET_GAME');
 					}
 				}
 			/>
@@ -242,15 +263,14 @@
 
 	class Game extends Component {
 		componentDidMount() {
-			console.log('is{isPlaying? ' + store.getState().isPlaying);
-			
 			// where does this go???
 			setInterval(() => {
 				console.log('calculating next generation..');
 				store.dispatch({
 					type: 'INCREMENT_GENERATION'
 				});
-			}, 3000); //get time from state
+				logDispatch('INCREMENT_GENERATION');
+			}, 10000); //get time from state
 		}
 
 		render() {
@@ -264,7 +284,8 @@
 								type: 'TOGGLE_CELL',
 								x: x,
 								y: y
-							});	
+							});
+							logDispatch('TOGGLE_CELL');	
 						}}
 						gridStyle={{minWidth:600, maxWidth:600}}
 					/>
