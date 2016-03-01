@@ -42,12 +42,37 @@
 
 	const grid = (state = initialState.grid, action) => {
 		switch (action.type) {
-		case 'RESET_GAME':
+		case 'RESET_GAME': {
+			let newCells = [];
+			const gridSize = state.gridSize;
+			const gridWidth = state.gridWidth;
+
+			for (let y = 0; y < gridSize; y++) {
+				newCells.push([]);
+				for (let x = 0; x < gridSize; x++) {
+					newCells[y][x] = {
+						cellSize: gridWidth / gridSize, 
+						xCoor: x,
+						yCoor: y,
+						isAlive: false
+					};
+				}
+			}
+
 			return Object.assign(
 				{}, 
 				state, 
+				{cells: newCells}
+			);
+		}
+		case 'TOGGLE_CELL': 
+		case 'INCREMENT_GENERATION' : {
+			return Object.assign(
+				{},
+				state,
 				{cells: cells(state.cells, action)}
 			);
+		}
 		default:
 			return state;
 		}
@@ -72,8 +97,8 @@
 		//state should be cells 
 
 		//firgure out how to get these values in
-		let gridSize = 20;
-		let gridWidth = 600;
+		// let gridSize = 20;
+		// let gridWidth = 600;
 
 		// countLiveNeighbors passed tests
 		const countLiveNeighbors = (cells, x, y) => {
@@ -124,22 +149,22 @@
 		};
 
 		switch (action.type) {
-		case 'RESET_GAME': {
-			let cells = [];
+		// case 'RESET_GAME': {
+		// 	let cells = [];
 
-			for (let y = 0; y < gridSize; y++) {
-				cells.push([]);
-				for (let x = 0; x < gridSize; x++) {
-					cells[y][x] = {
-						cellSize: gridWidth / gridSize, 
-						xCoor: x,
-						yCoor: y,
-						isAlive: false
-					};
-				}
-			}
-			return cells;
-		}
+		// 	for (let y = 0; y < gridSize; y++) {
+		// 		cells.push([]);
+		// 		for (let x = 0; x < gridSize; x++) {
+		// 			cells[y][x] = {
+		// 				cellSize: gridWidth / gridSize, 
+		// 				xCoor: x,
+		// 				yCoor: y,
+		// 				isAlive: false
+		// 			};
+		// 		}
+		// 	}
+		// 	return cells;
+		// }
 		case 'INCREMENT_GENERATION':
 			return state.map( (rows, y) => {
 				return rows.map( (cell, x) => {
@@ -193,7 +218,7 @@
 	const gameOfLife = combineReducers({
 		//key corresponds to state object it mananges
 		//values correspond to reducer functions that update the state
-		cells: cells,
+		grid: grid,
 		isPlaying: isPlaying
 		//since key/value match, ES6 obj literal shorthand allows omitting values
 	});
@@ -343,7 +368,7 @@
 
 	const render = () => {
 		ReactDOM.render(
-			<Game cells={store.getState().cells}/>,
+			<Game cells={store.getState().grid.cells}/>,
 			document.getElementById('react-redux')
 		);
 	};
