@@ -2,16 +2,13 @@
 	window.gameOfLife = window.gameOfLife || {};
 
 	//TODO1:
-	// figure out state tree to use size, width in grid creation
+	// get size input box to work
 	
 	// TODO2:
 	// get Play/Pause Button to work
 
 	// TODO3:
 	// get generationCount to work
-
-	// TODO4: 
-	// get size input box to work
 
 	//TODO5:
 	//implement time travel
@@ -29,12 +26,13 @@
 
 	var initialState = {
 		isPlaying: true,
-		refreshTime: 3000,
+		refreshTime: 200,
 		grid: {
-			gridSize: 6,
+			gridSize: 20,
 			gridWidth: 600,
 			cells: [[{'cellSize':120,'xCoor':0,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':0,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':1,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':2,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':3,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':4,'isAlive':false}]]
-		}
+		},
+		generationCount: 0
 	};	
 
 	//Reducers
@@ -65,6 +63,7 @@
 				{cells: newCells}
 			);
 		}
+		//passing states down to cells reducer
 		case 'TOGGLE_CELL': 
 		case 'INCREMENT_GENERATION' : {
 			return Object.assign(
@@ -94,11 +93,7 @@
 	};
 
 	const cells = (state = [], action) => {
-		//state should be cells 
-
-		//firgure out how to get these values in
-		// let gridSize = 20;
-		// let gridWidth = 600;
+		//state should be cells
 
 		// countLiveNeighbors passed tests
 		const countLiveNeighbors = (cells, x, y) => {
@@ -149,22 +144,6 @@
 		};
 
 		switch (action.type) {
-		// case 'RESET_GAME': {
-		// 	let cells = [];
-
-		// 	for (let y = 0; y < gridSize; y++) {
-		// 		cells.push([]);
-		// 		for (let x = 0; x < gridSize; x++) {
-		// 			cells[y][x] = {
-		// 				cellSize: gridWidth / gridSize, 
-		// 				xCoor: x,
-		// 				yCoor: y,
-		// 				isAlive: false
-		// 			};
-		// 		}
-		// 	}
-		// 	return cells;
-		// }
 		case 'INCREMENT_GENERATION':
 			return state.map( (rows, y) => {
 				return rows.map( (cell, x) => {
@@ -206,10 +185,19 @@
 
 	const isPlaying = (state = false, action) => {
 		switch (action.type) {
-		case 'PLAY_GAME':
-			return true;
+		case 'TOGGLE_PLAY':
+			return !state;
 		default:
 			return state;
+		}
+	};
+
+	const generationCount = (state = 0, action) => {
+		switch (action.type) {
+		case 'INCREMENT_GENERATION':
+			return generationCount + 1;
+		default: 
+			return 0;
 		}
 	};
 
@@ -219,7 +207,8 @@
 		//key corresponds to state object it mananges
 		//values correspond to reducer functions that update the state
 		grid: grid,
-		isPlaying: isPlaying
+		isPlaying: isPlaying,
+		generationCount: generationCount
 		//since key/value match, ES6 obj literal shorthand allows omitting values
 	});
 
@@ -275,7 +264,6 @@
 				width: cellSize,
 				height: cellSize
 			}} >
-			({x}, {y})
 		</div>
 	);
 
@@ -307,41 +295,43 @@
 
 	const UI = ({generationCount, onInput}) => (
 		<div id='game-ui' >
-			Generations: {generationCount}
-			cells per side:
-			<input type="text" onChange={onInput} width='50%'/>
-			<PlayControls 
-				onPlayClick={
-					() => {
-						store.dispatch({
-							type: 'TOGGLE_PLAY'
-						});
-						logDispatch('TOGGLE_PLAY');
+			<div>
+				Generations: {generationCount}
+			</div>
+			<div>
+				cells per side:
+				<input type="text" onChange={onInput} width='50%'/>
+			
+				<PlayControls 
+					onPlayClick={
+						() => {
+							store.dispatch({
+								type: 'TOGGLE_PLAY'
+							});
+							logDispatch('TOGGLE_PLAY');
+						}
 					}
-				}
-				onResetClick={
-					() => {
-						store.dispatch({
-							type: 'RESET_GAME'
-						});
-						logDispatch('RESET_GAME');
+					onResetClick={
+						() => {
+							store.dispatch({
+								type: 'RESET_GAME'
+							});
+							logDispatch('RESET_GAME');
+						}
 					}
-				}
-			/>
+				/>
+			</div>
 		</div>
 	);
 
 
 	class Game extends Component {
 		componentDidMount() {
-			// where does this go???
-			// setInterval(() => {
-			// 	console.log('calculating next generation..');
-			// 	store.dispatch({
-			// 		type: 'INCREMENT_GENERATION'
-			// 	});
-			// 	logDispatch('INCREMENT_GENERATION');
-			// }, 10000); //get time from state
+			console.log('component mounted.');
+		}
+
+		componentWillUnmount() {
+			console.log('component Will unmount');
 		}
 
 		render() {
@@ -360,7 +350,7 @@
 						}}
 						gridStyle={{minWidth:600, maxWidth:600}}
 					/>
-					<UI />
+					<UI generationCount={0}/>
 				</div>
 			);
 		}
@@ -376,6 +366,13 @@
 	store.subscribe(render);
 	render();
 
+	setInterval(() => {
+		if (store.getState().isPlaying) {
+			store.dispatch({
+				type: 'INCREMENT_GENERATION'
+			});
+		}
+	}, initialState.refreshTime); //can't use state for the time
 
 	//Tests
 
