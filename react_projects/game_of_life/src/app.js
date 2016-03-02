@@ -185,6 +185,8 @@
 
 	const isPlaying = (state = false, action) => {
 		switch (action.type) {
+		case 'STOP_PLAY':
+			return false;
 		case 'TOGGLE_PLAY':
 			return !state;
 		default:
@@ -195,9 +197,9 @@
 	const generationCount = (state = 0, action) => {
 		switch (action.type) {
 		case 'INCREMENT_GENERATION':
-			return generationCount + 1;
+			return state + 1;
 		default: 
-			return 0;
+			return state;
 		}
 	};
 
@@ -211,18 +213,6 @@
 		generationCount: generationCount
 		//since key/value match, ES6 obj literal shorthand allows omitting values
 	});
-
-
-	//tests
-	//8 live cells surround center dead cell (2,2)
-	var stateBefore = [[{'cellSize':120,'xCoor':0,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':0,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':1,'isAlive':true},{'cellSize':120,'xCoor':2,'yCoor':1,'isAlive':true},{'cellSize':120,'xCoor':3,'yCoor':1,'isAlive':true},{'cellSize':120,'xCoor':4,'yCoor':1,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':2,'isAlive':true},{'cellSize':120,'xCoor':2,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':2,'isAlive':true},{'cellSize':120,'xCoor':4,'yCoor':2,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':3,'isAlive':true},{'cellSize':120,'xCoor':2,'yCoor':3,'isAlive':true},{'cellSize':120,'xCoor':3,'yCoor':3,'isAlive':true},{'cellSize':120,'xCoor':4,'yCoor':3,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':4,'isAlive':false}]];
-	var stateAfter = [[{'cellSize':120,'xCoor':0,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':0,'isAlive':true},{'cellSize':120,'xCoor':3,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':0,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':1,'isAlive':true},{'cellSize':120,'xCoor':2,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':1,'isAlive':true},{'cellSize':120,'xCoor':4,'yCoor':1,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':2,'isAlive':true},{'cellSize':120,'xCoor':1,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':2,'isAlive':true}],[{'cellSize':120,'xCoor':0,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':3,'isAlive':true},{'cellSize':120,'xCoor':2,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':3,'isAlive':true},{'cellSize':120,'xCoor':4,'yCoor':3,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':4,'isAlive':true},{'cellSize':120,'xCoor':3,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':4,'isAlive':false}]];
-
-	// expect(
-	// 	cells(stateBefore, 'INCREMENT_GENERATION')
-	// ).toEqual(stateAfter);
-
-	// console.log('All tests pass.');
 
 	//Redux store
 	const { createStore } = Redux;
@@ -314,6 +304,10 @@
 					onResetClick={
 						() => {
 							store.dispatch({
+								type: 'STOP_PLAY'
+							});
+							logDispatch('STOP_PLAY');
+							store.dispatch({
 								type: 'RESET_GAME'
 							});
 							logDispatch('RESET_GAME');
@@ -350,7 +344,7 @@
 						}}
 						gridStyle={{minWidth:600, maxWidth:600}}
 					/>
-					<UI generationCount={0}/>
+					<UI generationCount={store.getState().generationCount}/>
 				</div>
 			);
 		}
@@ -371,6 +365,7 @@
 			store.dispatch({
 				type: 'INCREMENT_GENERATION'
 			});
+			logDispatch('INCREMENT_GENERATION');
 		}
 	}, initialState.refreshTime); //can't use state for the time
 
