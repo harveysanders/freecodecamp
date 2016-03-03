@@ -1,13 +1,6 @@
 (function(window) {
 	window.gameOfLife = window.gameOfLife || {};
 
-	//TODO1:
-	// get size input box to work
-	// ** narrowed down to interaction between Redux and this app.js script
-
-	//TODO2: 
-	// make random cells alive
-
 	//TODO5:
 	//implement time travel
 
@@ -69,6 +62,7 @@
 			);
 		}
 		//passing states down to cells reducer
+		case 'RANDOMIZE_CELLS':
 		case 'TOGGLE_CELL': 
 		case 'INCREMENT_GENERATION' : {
 			return Object.assign(
@@ -101,6 +95,10 @@
 			}
 			return Object.assign({}, state, {
 				isAlive: !state.isAlive
+			});
+		case 'RANDOMIZE_CELLS':
+			return Object.assign({}, state, {
+				isAlive: Math.floor(Math.random()*2) > 0 ? true : false
 			});
 		default: 
 			return state;
@@ -189,6 +187,7 @@
 					}
 				});
 			});
+		case 'RANDOMIZE_CELLS':
 		case 'TOGGLE_CELL':
 			return state.map((rows) => {
 				return rows.map((c) => cell(c, action));
@@ -274,9 +273,10 @@
 		</div>
 	);
 
-	const PlayControls = ({onPlayClick, onResetClick}) => (
+	const PlayControls = ({onPlayClick, onRandomClick, onResetClick}) => (
 		<div className="btn-group" role="group" aria-label="play-controls">
 			<button onClick={onPlayClick} type="button" className="btn btn-secondary">Play/Pause</button>
+			<button onClick={onRandomClick} type="button" className="btn btn-secondary">Randomize Game</button>
 			<button onClick={onResetClick} type="button" className="btn btn-secondary">Reset Game</button>
 		</div>
 	);
@@ -306,7 +306,7 @@
 				Generations: {generationCount}
 			</div>
 			<div>
-				cells per side:
+				cells per side: (5 will create a 5x5 grid)
 				<SizeInput />
 			
 				<PlayControls 
@@ -330,7 +330,18 @@
 							logDispatch('RESET_GAME');
 						}
 					}
+					onRandomClick={
+						() => {
+							store.dispatch({
+								type: 'RANDOMIZE_CELLS'
+							});
+							logDispatch('RANDOMIZE_CELLS');
+						}
+					}
 				/>
+				<div>
+					* You can step through one generation at a time by using the right arrow key.
+				</div>
 			</div>
 		</div>
 	);
@@ -342,6 +353,7 @@
 					<input 
 						type="text" 
 						width='50%'
+						placeholder={store.getState().grid.gridSize}
 						ref={node => {
 							this.input = node;
 						}}
@@ -360,11 +372,15 @@
 
 	class Game extends Component {
 		componentDidMount() {
-			console.log('component mounted.');
-		}
-
-		componentWillUnmount() {
-			console.log('component Will unmount');
+			store.dispatch({
+				type: 'UPDATE_GRID_SIZE',
+				gridSize: 20
+			});
+			logDispatch('UPDATE_GRID_SIZE');
+			store.dispatch({
+				type: 'RESET_GAME'
+			});
+			logDispatch('RESET_GAME');
 		}
 
 		render() {
@@ -408,8 +424,7 @@
 			});
 			logDispatch('INCREMENT_GENERATION');
 		}
-	}, initialState.refreshTime); //can't use state for the time
+	}, initialState.refreshTime);
 
-	//Tests
 
 })(window);
