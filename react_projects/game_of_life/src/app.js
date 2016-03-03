@@ -3,12 +3,10 @@
 
 	//TODO1:
 	// get size input box to work
-	
-	// TODO2:
-	// get Play/Pause Button to work
+	// ** narrowed down to interaction between Redux and this app.js script
 
-	// TODO3:
-	// get generationCount to work
+	//TODO2: 
+	// make random cells alive
 
 	//TODO5:
 	//implement time travel
@@ -28,7 +26,7 @@
 		isPlaying: true,
 		refreshTime: 200,
 		grid: {
-			gridSize: 20,
+			gridSize: 25,
 			gridWidth: 600,
 			cells: [[{'cellSize':120,'xCoor':0,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':0,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':0,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':1,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':1,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':2,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':2,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':3,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':3,'isAlive':false}],[{'cellSize':120,'xCoor':0,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':1,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':2,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':3,'yCoor':4,'isAlive':false},{'cellSize':120,'xCoor':4,'yCoor':4,'isAlive':false}]]
 		},
@@ -40,6 +38,13 @@
 
 	const grid = (state = initialState.grid, action) => {
 		switch (action.type) {
+		case 'UPDATE_GRID_SIZE' : {
+			return Object.assign(
+				{},
+				state,
+				{gridSize: gridSize(state.gridSize, action)}
+			);
+		}
 		case 'RESET_GAME': {
 			let newCells = [];
 			const gridSize = state.gridSize;
@@ -71,6 +76,16 @@
 				state,
 				{cells: cells(state.cells, action)}
 			);
+		}
+		default:
+			return state;
+		}
+	};
+
+	const gridSize = (state = 20, action) => {
+		switch (action.type) {
+		case 'UPDATE_GRID_SIZE': {
+			return action.gridSize;
 		}
 		default:
 			return state;
@@ -196,6 +211,8 @@
 
 	const generationCount = (state = 0, action) => {
 		switch (action.type) {
+		case 'RESET_GAME':
+			return 0;
 		case 'INCREMENT_GENERATION':
 			return state + 1;
 		default: 
@@ -239,7 +256,7 @@
 			logDispatch('INCREMENT_GENERATION');
 			break;
 		}
-		event.preventDefault();
+		// event.preventDefault();
 	};
 
 	//Componets
@@ -283,14 +300,14 @@
 		</div>
 	);
 
-	const UI = ({generationCount, onInput}) => (
+	const UI = ({generationCount}) => (
 		<div id='game-ui' >
 			<div>
 				Generations: {generationCount}
 			</div>
 			<div>
 				cells per side:
-				<input type="text" onChange={onInput} width='50%'/>
+				<SizeInput />
 			
 				<PlayControls 
 					onPlayClick={
@@ -318,6 +335,28 @@
 		</div>
 	);
 
+	class SizeInput extends Component {
+		render() {
+			return (
+				<div>
+					<input 
+						type="text" 
+						width='50%'
+						ref={node => {
+							this.input = node;
+						}}
+						onInput={()=>{
+							store.dispatch({
+								type: 'UPDATE_GRID_SIZE',
+								gridSize: parseInt(this.input.value)
+							});
+							logDispatch('UPDATE_GRID_SIZE');
+						}}
+					/>
+				</div>
+			);
+		}
+	}
 
 	class Game extends Component {
 		componentDidMount() {
@@ -344,7 +383,9 @@
 						}}
 						gridStyle={{minWidth:600, maxWidth:600}}
 					/>
-					<UI generationCount={store.getState().generationCount}/>
+					<UI 
+						generationCount={store.getState().generationCount}
+						/>
 				</div>
 			);
 		}
