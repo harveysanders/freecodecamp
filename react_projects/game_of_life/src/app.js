@@ -333,6 +333,10 @@
 					onRandomClick={
 						() => {
 							store.dispatch({
+								type: 'RESET_GAME'
+							});
+							logDispatch('RESET_GAME');
+							store.dispatch({
 								type: 'RANDOMIZE_CELLS'
 							});
 							logDispatch('RANDOMIZE_CELLS');
